@@ -23,11 +23,21 @@
   --r:14px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;}
+html{
+  height:100%;overflow:hidden;
+  touch-action:pan-y; /* منع الزوم بإيماءة الإصبعين */
+  -ms-touch-action:pan-y;
+}
+body{
+  height:100%;overflow:hidden;
+  font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);
+  touch-action:pan-y;
+}
 
 /* ── SHELL ── */
-#shell{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden}
+#shell{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden;touch-action:pan-y}
 
 /* ── TOP BAR ── */
 #topbar{
@@ -42,7 +52,14 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
 #topbar .top-right{display:flex;gap:8px}
 
 /* ── SCROLL AREA ── */
-#scroll-area{flex:1;overflow-y:auto;padding:12px 14px;padding-bottom:80px;-webkit-overflow-scrolling:touch}
+#scroll-area{
+  flex:1;
+  overflow-y:auto;overflow-x:hidden;
+  padding:12px 14px;padding-bottom:80px;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+}
 #scroll-area::-webkit-scrollbar{display:none}
 
 /* ── BOTTOM NAV ── */
@@ -175,7 +192,7 @@ input[type="date"]{
 .sheet-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 14px}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;border-bottom:1px solid var(--border)}
 .sheet-head h3{font-size:16px;font-weight:700}
-.sheet-body{flex:1;overflow-y:auto;padding:0 16px}
+.sheet-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 .sheet-body::-webkit-scrollbar{display:none}
 .cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .cart-row:last-child{border:none}
@@ -900,14 +917,19 @@ function renderExpenses(){
 // ═══ INVENTORY ═══
 function toISO(d){
   if(!d) return '';
+  d = String(d).trim();
   // already ISO: 2026-05-25
   if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  // Arabic locale like ٢٥/٥/٢٠٢٦ or 25/5/2026
-  const normalized = d.replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c));
-  const parts = normalized.split('/');
+  // convert Eastern Arabic numerals ٠١٢٣٤٥٦٧٨٩ to Western
+  const ar='٠١٢٣٤٥٦٧٨٩';
+  d = d.replace(/[٠-٩]/g, c => ar.indexOf(c).toString());
+  const parts = d.split(/[\/\-\.]/);
   if(parts.length===3){
-    const [day,month,year] = parts;
-    return `${year.padStart(4,'0')}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+    const p0=parseInt(parts[0]), p1=parseInt(parts[1]), p2=parseInt(parts[2]);
+    // Year/Month/Day (e.g. 2026/5/25)
+    if(p0>31){ return `${p0}-${String(p1).padStart(2,'0')}-${String(p2).padStart(2,'0')}`; }
+    // Day/Month/Year (e.g. 25/5/2026)
+    if(p2>31){ return `${p2}-${String(p1).padStart(2,'0')}-${String(p0).padStart(2,'0')}`; }
   }
   return d;
 }
