@@ -325,9 +325,9 @@ input[type="date"]{
     <!-- ═══ DASHBOARD ═══ -->
     <div id="pg-home" class="page active">
       <div class="stats-row">
-        <div class="stat-card sc-gold"><div class="stat-lbl">إجمالي المبيعات</div><div class="stat-val sv-gold" id="ds-sales">0 ₪</div></div>
-        <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ds-exp">0 ₪</div></div>
-        <div class="stat-card sc-green"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ds-profit">0 ₪</div></div>
+        <div class="stat-card sc-gold"><div class="stat-lbl">إجمالي المبيعات</div><div class="stat-val sv-gold" id="ds-sales">0</div></div>
+        <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ds-exp">0</div></div>
+        <div class="stat-card sc-green"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ds-profit">0</div></div>
         <div class="stat-card sc-blue"><div class="stat-lbl">المنتجات</div><div class="stat-val sv-blue" id="ds-prods">0</div></div>
       </div>
       <div class="card">
@@ -430,9 +430,9 @@ input[type="date"]{
       </div>
       <div id="iv-result" style="display:none">
         <div class="stats-row">
-          <div class="stat-card sc-gold"><div class="stat-lbl">المبيعات</div><div class="stat-val sv-gold" id="ir-s">0 ₪</div></div>
-          <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ir-e">0 ₪</div></div>
-          <div class="stat-card sc-green" style="grid-column:1/-1"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ir-p">0 ₪</div></div>
+          <div class="stat-card sc-gold"><div class="stat-lbl">المبيعات</div><div class="stat-val sv-gold" id="ir-s">0</div></div>
+          <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ir-e">0</div></div>
+          <div class="stat-card sc-green" style="grid-column:1/-1"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ir-p">0</div></div>
         </div>
         <div class="card" id="iv-inv-card" style="display:none">
           <div class="sec-title">تفاصيل الفواتير</div>
@@ -492,13 +492,13 @@ input[type="date"]{
   <div class="sheet-body" id="cart-body"></div>
   <div class="sheet-foot">
     <div class="disc-row">
-      <input type="number" id="discount" placeholder="خصم ₪" inputmode="decimal" oninput="renderCart()" style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px">
+      <input type="number" id="discount" placeholder="خصم" inputmode="decimal" oninput="renderCart()" style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px">
     </div>
     <div class="total-lines">
-      <div class="tl"><span>المجموع</span><span id="cart-sub">0 ₪</span></div>
-      <div class="tl"><span style="color:var(--A2)">الخصم</span><span id="cart-disc" style="color:var(--A2)">0 ₪</span></div>
+      <div class="tl"><span>المجموع</span><span id="cart-sub">0</span></div>
+      <div class="tl"><span style="color:var(--A2)">الخصم</span><span id="cart-disc" style="color:var(--A2)">0</span></div>
     </div>
-    <div class="tl big" style="margin-bottom:12px"><span>الإجمالي</span><span id="cart-total" style="color:var(--A)">0 ₪</span></div>
+    <div class="tl big" style="margin-bottom:12px"><span>الإجمالي</span><span id="cart-total" style="color:var(--A)">0</span></div>
     <button class="btn btn-primary btn-full" style="margin-bottom:8px" onclick="checkout()">✅ إتمام البيع</button>
     <button class="btn btn-ghost btn-full" onclick="clearCart()">🗑️ إفراغ السلة</button>
   </div>
@@ -523,8 +523,8 @@ input[type="date"]{
       </div>
       <div class="fg"><label>اسم المنتج *</label><input type="text" id="p-name" placeholder="اسم المنتج"></div>
       <div class="form-row">
-        <div class="fg"><label>سعر الشراء ₪</label><input type="number" id="p-buy" placeholder="0" inputmode="decimal"></div>
-        <div class="fg"><label>سعر البيع ₪</label><input type="number" id="p-sell" placeholder="0" inputmode="decimal"></div>
+        <div class="fg"><label>سعر الشراء</label><input type="number" id="p-buy" placeholder="0" inputmode="decimal"></div>
+        <div class="fg"><label>سعر البيع</label><input type="number" id="p-sell" placeholder="0" inputmode="decimal"></div>
       </div>
       <div class="fg"><label>الكمية المتوفرة</label><input type="number" id="p-qty" placeholder="0" inputmode="numeric"></div>
       <div class="fg">
@@ -963,7 +963,7 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
 });
 
 // ═══ UTILS ═══
-function fmt(n){return(n||0).toLocaleString('ar-SA',{minimumFractionDigits:0})+' ₪';}
+function fmt(n){return(n||0).toLocaleString('ar-SA',{minimumFractionDigits:0})+'';}
 function toast(msg,err=false){
   const t=document.getElementById('toast');
   t.textContent=msg;
