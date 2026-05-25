@@ -296,9 +296,73 @@ input[type="date"]{
 
 /* ── INVENTORY FILTERS ── */
 .filter-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+
+/* ── LOCK SCREEN ── */
+#lock-screen{
+  position:fixed;inset:0;z-index:200;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 24px;
+  max-width:480px;margin:0 auto;
+}
+#lock-screen.hidden{display:none}
+.lock-logo{font-size:56px;margin-bottom:8px}
+.lock-title{font-size:24px;font-weight:900;color:var(--A);margin-bottom:4px}
+.lock-sub{font-size:13px;color:var(--sub);margin-bottom:32px;text-align:center}
+.lock-box{width:100%;max-width:320px}
+.lock-box label{font-size:12px;color:var(--sub);font-weight:600;display:block;margin-bottom:6px}
+.lock-box input{
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;color:var(--text);
+  font-family:'Tajawal',sans-serif;font-size:18px;text-align:center;
+  letter-spacing:4px;margin-bottom:12px;
+  -webkit-appearance:none;appearance:none;
+}
+.lock-box input:focus{outline:none;border-color:var(--A)}
+.lock-err{color:var(--A2);font-size:13px;text-align:center;min-height:20px;margin-bottom:10px}
+.lock-tabs{display:flex;gap:8px;margin-bottom:20px}
+.lock-tab{
+  flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);
+  background:var(--s2);color:var(--sub);font-family:'Tajawal',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;text-align:center;
+}
+.lock-tab.active{background:rgba(246,168,50,.12);border-color:var(--A);color:var(--A)}
 </style>
 </head>
 <body>
+
+<!-- ═══ LOCK SCREEN ═══ -->
+<div id="lock-screen">
+  <div class="lock-logo">🏪</div>
+  <div class="lock-title">متجري</div>
+  <div class="lock-sub" id="lock-sub">أدخل كلمة المرور للدخول</div>
+
+  <div class="lock-box">
+    <!-- TAB: مستخدم قديم = كلمة مرور فقط | مستخدم جديد = كود تفعيل + كلمة مرور -->
+    <div class="lock-tabs" id="lock-tabs">
+      <div class="lock-tab active" onclick="switchLockTab('login')">دخول</div>
+      <div class="lock-tab" onclick="switchLockTab('activate')">تفعيل جهاز جديد</div>
+    </div>
+
+    <!-- دخول عادي -->
+    <div id="tab-login">
+      <label>كلمة المرور</label>
+      <input type="password" id="lock-pass" placeholder="••••••" onkeydown="if(event.key==='Enter') doLogin()">
+      <div class="lock-err" id="lock-err-login"></div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()">🔓 دخول</button>
+    </div>
+
+    <!-- تفعيل جهاز جديد -->
+    <div id="tab-activate" style="display:none">
+      <label>كود التفعيل</label>
+      <input type="text" id="lock-acode" placeholder="أدخل كود التفعيل" style="letter-spacing:2px" onkeydown="if(event.key==='Enter') document.getElementById('lock-apass').focus()">
+      <label style="margin-top:8px">كلمة المرور</label>
+      <input type="password" id="lock-apass" placeholder="••••••" onkeydown="if(event.key==='Enter') doActivate()">
+      <div class="lock-err" id="lock-err-activate"></div>
+      <button class="btn btn-primary btn-full" onclick="doActivate()">✅ تفعيل</button>
+    </div>
+  </div>
+</div>
 
 <div id="shell">
 
@@ -1020,7 +1084,77 @@ function toast(msg,err=false){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
+// ═══ LOCK SYSTEM ═══
+// ⚙️ لتغيير كلمة المرور أو كود التفعيل، غيّر القيم هنا فقط:
+const PASS_HASH    = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // كلمة المرور: admin
+const ACTIV_HASH   = 'b94d27b9934d3e08a52e52d7da7dabfac484efe04294e576b05d02ca2af15f62'; // كود التفعيل: activate2024
+// لتغيير كلمة المرور: ابعت لـ Claude الكلمة الجديدة وبيعطيك الـ hash
+
+async function sha256(msg){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function getDeviceId(){
+  let id=localStorage.getItem('_did');
+  if(!id){ id=crypto.randomUUID(); localStorage.setItem('_did',id); }
+  return id;
+}
+function isActivated(){
+  // الجهاز مفعّل إذا محفوظ في localStorage
+  return localStorage.getItem('_act')==='1';
+}
+function switchLockTab(tab){
+  document.querySelectorAll('.lock-tab').forEach((t,i)=>t.classList.toggle('active',(i===(tab==='login'?0:1))));
+  document.getElementById('tab-login').style.display=tab==='login'?'block':'none';
+  document.getElementById('tab-activate').style.display=tab==='activate'?'block':'none';
+  document.getElementById('lock-sub').textContent=tab==='login'?'أدخل كلمة المرور للدخول':'فعّل جهازك بكود التفعيل';
+}
+async function doLogin(){
+  const pass=document.getElementById('lock-pass').value;
+  const err=document.getElementById('lock-err-login');
+  if(!pass){ err.textContent='أدخل كلمة المرور'; return; }
+  const h=await sha256(pass);
+  if(h===PASS_HASH){
+    err.textContent='';
+    document.getElementById('lock-screen').classList.add('hidden');
+  } else {
+    err.textContent='❌ كلمة المرور غير صحيحة';
+    document.getElementById('lock-pass').value='';
+  }
+}
+async function doActivate(){
+  const code=document.getElementById('lock-acode').value.trim();
+  const pass=document.getElementById('lock-apass').value;
+  const err=document.getElementById('lock-err-activate');
+  if(!code||!pass){ err.textContent='أدخل الكود وكلمة المرور'; return; }
+  const ch=await sha256(code);
+  const ph=await sha256(pass);
+  if(ch===ACTIV_HASH && ph===PASS_HASH){
+    localStorage.setItem('_act','1');
+    err.textContent='';
+    document.getElementById('lock-screen').classList.add('hidden');
+  } else {
+    err.textContent='❌ الكود أو كلمة المرور غير صحيحة';
+    document.getElementById('lock-acode').value='';
+    document.getElementById('lock-apass').value='';
+  }
+}
+function initLock(){
+  if(isActivated()){
+    // جهاز مفعّل سابقاً → يطلب كلمة المرور فقط
+    document.getElementById('lock-tabs').style.display='none';
+    document.getElementById('tab-activate').style.display='none';
+    document.getElementById('tab-login').style.display='block';
+  } else {
+    // جهاز جديد → يطلب كود التفعيل
+    switchLockTab('activate');
+    document.getElementById('lock-tabs').style.display='none'; // إخفاء التابز، مباشرة لتفعيل
+    document.getElementById('lock-sub').textContent='جهاز جديد — أدخل كود التفعيل وكلمة المرور';
+  }
+}
+
 // ═══ BOOT ═══
+initLock();
 loadDB();
 updateDash();
 renderProducts();
