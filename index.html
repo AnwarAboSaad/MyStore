@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d0d14">
-<meta name="format-detection" content="telephone=no">
 <title>متجري</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -91,44 +90,13 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
 
 /* ── FORM ── */
 .form-col{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.form-row{
-  display:flex;
-  gap:10px;
-  width:100%;
-}
-
-.form-row .fg{
-  flex:1;
-  min-width:0;
-}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fg label{font-size:12px;color:var(--sub);font-weight:600}
 .fg input,.fg select,.fg textarea{
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:11px 12px;
-  color:var(--text);
-  font-family:'Tajawal',sans-serif;
-  font-size:15px;
-  width:100%;
-  min-width:0;
-  box-sizing:border-box;
-  transition:.2s;
-}
-
-/* Safari iPhone Fix */
-input[type="date"]{
-  display:block;
-  width:100%;
-  min-width:0;
-  max-width:100%;
-  height:52px;
-  overflow:hidden;
-  -webkit-appearance:none;
-  appearance:none;
-  text-align:center;
-  direction:ltr;
+  background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  padding:11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;
+  width:100%;transition:.2s;
 }
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--A);box-shadow:0 0 0 3px rgba(246,168,50,.1)}
 .fg select option{background:var(--s2)}
@@ -378,7 +346,7 @@ input[type="date"]{
         </div>
         <div class="list-row" style="padding:14px;cursor:pointer;border:none" onclick="openSubPage('backup')">
           <span style="font-size:22px">☁️</span>
-          <div class="row-info"><div class="row-title">النسخ الاحتياطي</div><div class="row-sub">تيليغرام وتنزيل</div></div>
+          <div class="row-info"><div class="row-title">النسخ الاحتياطي</div><div class="row-sub">تنزيل واستيراد</div></div>
           <span style="color:var(--sub)">‹</span>
         </div>
       </div>
@@ -448,22 +416,21 @@ input[type="date"]{
     <!-- ═══ SUB: BACKUP ═══ -->
     <div id="pg-backup" class="page">
       <div class="card">
-        <div class="sec-title">📤 إرسال لتيليغرام</div>
-        <div class="step"><div class="step-n">1</div><p>افتح تيليغرام وابحث عن <code>@BotFather</code> ثم أنشئ بوت جديد بـ <code>/newbot</code> للحصول على الـ Token.</p></div>
-        <div class="step"><div class="step-n">2</div><p>أرسل رسالة لبوتك، ثم افتح:<br><code>api.telegram.org/bot<b>TOKEN</b>/getUpdates</code><br>لتحصل على الـ chat_id.</p></div>
-        <div class="step"><div class="step-n">3</div><p>أدخل البيانات وأرسل النسخة.</p></div>
-        <div class="form-col" style="margin-top:6px">
-          <div class="fg"><label>Bot Token</label><input type="text" id="tg-token" placeholder="123456:ABCdef..." autocomplete="off"></div>
-          <div class="fg"><label>Chat ID</label><input type="text" id="tg-chat" placeholder="-100..." inputmode="numeric"></div>
-        </div>
-        <button class="btn btn-primary btn-full" onclick="sendTelegram()">📨 إرسال النسخة الاحتياطية</button>
-      </div>
-      <div class="card">
-        <div class="sec-title">💾 محلي</div>
+        <div class="sec-title">💾 نسخة احتياطية</div>
+        <p style="font-size:13px;color:var(--sub);margin-bottom:16px;line-height:1.6">
+          احفظ بيانات متجرك (منتجات، فواتير، مصاريف) في ملف على جهازك، وأعد تحميله في أي وقت.
+        </p>
         <div style="display:flex;flex-direction:column;gap:10px">
           <button class="btn btn-success btn-full" onclick="downloadBackup()">⬇️ تنزيل نسخة احتياطية</button>
-          <button class="btn btn-ghost btn-full" onclick="document.getElementById('restore-input').click()">⬆️ استعادة نسخة</button>
+          <button class="btn btn-ghost btn-full" onclick="document.getElementById('restore-input').click()">⬆️ استيراد نسخة احتياطية</button>
           <input type="file" id="restore-input" accept=".json" style="display:none" onchange="restoreBackup(this)">
+        </div>
+        <div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--sub);line-height:1.8">
+            <div>📦 المنتجات: <strong style="color:var(--text)" id="bk-prods">0</strong></div>
+            <div>🧾 الفواتير: <strong style="color:var(--text)" id="bk-invs">0</strong></div>
+            <div>💸 المصاريف: <strong style="color:var(--text)" id="bk-exps">0</strong></div>
+          </div>
         </div>
       </div>
     </div>
@@ -566,12 +533,50 @@ let cart=[];
 let curPage='home';
 let curInv=null;
 
+// مخطط الألوان: اسم اللون → HEX
+const COLOR_MAP={
+  'أحمر':'#ef4444','أحمر غامق':'#991b1b','أحمر فاتح':'#fca5a5',
+  'أزرق':'#3b82f6','أزرق غامق':'#1e3a8a','أزرق فاتح':'#93c5fd','أزرق سماوي':'#38bdf8',
+  'أخضر':'#22c55e','أخضر غامق':'#14532d','أخضر فاتح':'#86efac','زيتي':'#65a30d',
+  'أصفر':'#eab308','بيج':'#d4a96a','برتقالي':'#f97316','برتقالي فاتح':'#fdba74',
+  'بنفسجي':'#a855f7','بنفسجي فاتح':'#d8b4fe','وردي':'#ec4899','وردي فاتح':'#f9a8d4',
+  'أبيض':'#e2e8f0','رمادي':'#6b7280','رمادي فاتح':'#d1d5db','رمادي غامق':'#374151',
+  'أسود':'#334155','بني':'#92400e','بني فاتح':'#d97706','كحلي':'#1e3a5f',
+  'تركوازي':'#14b8a6','نيلي':'#4f46e5','ذهبي':'#f59e0b','فضي':'#94a3b8',
+  'كريمي':'#fef3c7','خمري':'#7f1d1d','زهري':'#fb7185',
+  'red':'#ef4444','blue':'#3b82f6','green':'#22c55e','yellow':'#eab308',
+  'orange':'#f97316','purple':'#a855f7','pink':'#ec4899','white':'#e2e8f0',
+  'black':'#334155','gray':'#6b7280','grey':'#6b7280','brown':'#92400e',
+  'beige':'#d4a96a','gold':'#f59e0b','silver':'#94a3b8','navy':'#1e3a5f',
+};
+function getColorHex(name){
+  if(!name) return '#888';
+  const lower=name.trim().toLowerCase();
+  for(const [k,v] of Object.entries(COLOR_MAP)){if(k.toLowerCase()===lower) return v;}
+  if(/^#[0-9a-fA-F]{3,6}$/.test(name.trim())) return name.trim();
+  return '#888';
+}
+function colorDot(name,size=10){
+  if(!name) return '';
+  const hex=getColorHex(name);
+  return `<span style="display:inline-block;width:${size}px;height:${size}px;border-radius:50%;background:${hex};border:1px solid rgba(255,255,255,.25);flex-shrink:0"></span>`;
+}
+
 function loadDB(){
   const s=localStorage.getItem('mstore');
   if(s) db=JSON.parse(s);
   document.getElementById('exp-date').value=new Date().toISOString().split('T')[0];
+  updateBackupStats();
 }
-function saveDB(){ localStorage.setItem('mstore',JSON.stringify(db)); }
+function saveDB(){ localStorage.setItem('mstore',JSON.stringify(db)); updateBackupStats(); }
+function updateBackupStats(){
+  const bp=document.getElementById('bk-prods');
+  const bi=document.getElementById('bk-invs');
+  const be=document.getElementById('bk-exps');
+  if(bp) bp.textContent=db.products.length;
+  if(bi) bi.textContent=db.invoices.length;
+  if(be) be.textContent=db.expenses.length;
+}
 
 // ═══ NAV ═══
 const pageTitles={home:'الرئيسية',products:'المنتجات',pos:'الكاشير',more:'المزيد',invoices:'الفواتير',expenses:'المصاريف',inventory:'الجرد',backup:'النسخ الاحتياطي'};
@@ -610,6 +615,7 @@ function showPage(p){
   if(p==='home') updateDash();
   if(p==='invoices') renderInvoices();
   if(p==='expenses') renderExpenses();
+  if(p==='backup') updateBackupStats();
   document.getElementById('scroll-area').scrollTop=0;
 }
 
@@ -617,23 +623,9 @@ function showPage(p){
 function updateDash(){
   const ts=db.invoices.reduce((a,i)=>a+i.total,0);
   const te=db.expenses.reduce((a,e)=>a+e.amount,0);
-
-  // حساب تكلفة شراء المنتجات المباعة
-  let buyCost = 0;
-  db.invoices.forEach(inv=>{
-    inv.items.forEach(item=>{
-      const prod = db.products.find(p=>p.id===item.pid);
-      if(prod){
-        buyCost += (prod.buy || 0) * item.qty;
-      }
-    });
-  });
-
   document.getElementById('ds-sales').textContent=fmt(ts);
   document.getElementById('ds-exp').textContent=fmt(te);
-
-  // صافي الربح = المبيعات - المصاريف - تكلفة الشراء
-  document.getElementById('ds-profit').textContent=fmt(ts-te-buyCost);
+  document.getElementById('ds-profit').textContent=fmt(ts-te);
   document.getElementById('ds-prods').textContent=db.products.length;
   // recent invoices
   const ri=[...db.invoices].reverse().slice(0,4);
@@ -710,15 +702,18 @@ function deleteProduct(id){
 }
 function renderProducts(){
   const q=(document.getElementById('prod-q')||{}).value||'';
-  const list=db.products.filter(p=>!q||p.name.includes(q)||(p.num||'').includes(q));
+  const list=db.products.filter(p=>!q||p.name.includes(q)||(p.num||'').includes(q)||(p.color||'').includes(q));
   const el=document.getElementById('prod-list');
   el.innerHTML=list.length?`<div class="card">`+list.map(p=>`
     <div class="list-row">
       <div class="row-img">${p.img?`<img src="${p.img}" alt="">`:'📦'}</div>
       <div class="row-info">
-        <div class="row-title">${p.name}${p.color?` <span style="color:var(--sub);font-weight:400;font-size:12px">(${p.color})</span>`:''}</div>
+        <div class="row-title">${p.name}</div>
         <div class="row-sub">شراء: ${fmt(p.buy)} • بيع: ${fmt(p.sell)} • ربح: <span style="color:var(--G)">${fmt(p.sell-p.buy)}</span></div>
-        <div style="margin-top:4px"><span class="badge ${p.qty>5?'b-green':p.qty>0?'b-gold':'b-red'}">كمية: ${p.qty}</span></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap">
+          <span class="badge ${p.qty>5?'b-green':p.qty>0?'b-gold':'b-red'}">كمية: ${p.qty}</span>
+          ${p.color?`<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(255,255,255,.07);border:1px solid var(--border)">${colorDot(p.color,10)}<span>${p.color}</span></span>`:''}
+        </div>
       </div>
       <div class="row-actions">
         <button class="btn btn-ghost btn-sm" onclick="editProduct(${p.id})">✏️</button>
@@ -731,13 +726,14 @@ function renderProducts(){
 // ═══ POS ═══
 function renderPOS(){
   const q=(document.getElementById('pos-q')||{}).value||'';
-  const list=db.products.filter(p=>p.qty>0&&(!q||p.name.includes(q)||(p.num||'').includes(q)));
+  const list=db.products.filter(p=>p.qty>0&&(!q||p.name.includes(q)||(p.num||'').includes(q)||(p.color||'').includes(q)));
   const grid=document.getElementById('pos-grid'); if(!grid) return;
   grid.innerHTML=list.length?list.map(p=>`
     <div class="pos-item" onclick="addToCart(${p.id})">
       ${p.img?`<img src="${p.img}" alt="">`:`<div class="pos-emoji">📦</div>`}
       <div class="pos-name">${p.name}</div>
       <div class="pos-price">${fmt(p.sell)}</div>
+      ${p.color?`<div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px;font-size:11px;color:var(--sub)">${colorDot(p.color,10)}<span>${p.color}</span></div>`:''}
       <div class="pos-stock">متوفر: ${p.qty}</div>
     </div>`).join(''):`<div style="grid-column:1/-1"><div class="empty"><div class="ei">🛒</div><p>لا توجد منتجات متاحة</p></div></div>`;
 }
@@ -745,9 +741,8 @@ function addToCart(pid){
   const p=db.products.find(x=>x.id===pid); if(!p||p.qty<=0) return;
   const ex=cart.find(c=>c.pid===pid);
   if(ex){if(ex.qty>=p.qty) return toast('⚠️ لا يوجد مخزون كافٍ',true); ex.qty++;}
-  else cart.push({pid,name:p.name,price:p.sell,qty:1});
+  else cart.push({pid,name:p.name,price:p.sell,qty:1,color:p.color||''});
   renderCart(); updateFAB();
-  // visual feedback
   toast(`+ ${p.name}`);
 }
 function changeQty(pid,d){
@@ -763,7 +758,7 @@ function renderCart(){
     body.innerHTML=cart.map(c=>`
       <div class="cart-row">
         <div class="cart-info">
-          <div class="cart-name">${c.name}</div>
+          <div class="cart-name" style="display:flex;align-items:center;gap:6px">${c.name}${c.color?colorDot(c.color,9):''}</div>
           <div class="cart-price">${fmt(c.price)} × ${c.qty} = <strong style="color:var(--A)">${fmt(c.price*c.qty)}</strong></div>
         </div>
         <div class="qty-wrap">
@@ -904,23 +899,9 @@ function runInventory(){
   if(to){invs=invs.filter(i=>parseDate(i.date)<=to); exps=exps.filter(e=>e.date<=to);}
   const st=invs.reduce((a,i)=>a+i.total,0);
   const et=exps.reduce((a,e)=>a+e.amount,0);
-
-  // تكلفة شراء المنتجات المباعة ضمن الجرد
-  let buyCost = 0;
-  invs.forEach(inv=>{
-    inv.items.forEach(item=>{
-      const prod = db.products.find(p=>p.id===item.pid);
-      if(prod){
-        buyCost += (prod.buy || 0) * item.qty;
-      }
-    });
-  });
-
   document.getElementById('ir-s').textContent=fmt(st);
   document.getElementById('ir-e').textContent=fmt(et);
-
-  // صافي الربح = المبيعات - المصاريف - تكلفة الشراء
-  document.getElementById('ir-p').textContent=fmt(st-et-buyCost);
+  document.getElementById('ir-p').textContent=fmt(st-et);
   const ic=document.getElementById('iv-inv-card');
   const ec=document.getElementById('iv-exp-card');
   if(type!=='expenses'){
@@ -956,31 +937,19 @@ function downloadBackup(){
   a.href=URL.createObjectURL(blob);
   a.download=`store-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
-  toast('✅ تم التنزيل');
+  toast('✅ تم تنزيل النسخة الاحتياطية');
 }
 function restoreBackup(inp){
   const f=inp.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=e=>{try{db=JSON.parse(e.target.result);saveDB();loadDB();updateDash();renderProducts();renderPOS();renderInvoices();renderExpenses();toast('✅ تمت الاستعادة');}catch{toast('❌ ملف غير صالح',true);}};
+  r.onload=e=>{
+    try{
+      db=JSON.parse(e.target.result);
+      saveDB(); loadDB(); updateDash(); renderProducts(); renderPOS(); renderInvoices(); renderExpenses();
+      toast('✅ تمت الاستعادة بنجاح');
+    }catch{ toast('❌ ملف غير صالح',true); }
+  };
   r.readAsText(f);
-}
-async function sendTelegram(){
-  const token=document.getElementById('tg-token').value.trim();
-  const chat=document.getElementById('tg-chat').value.trim();
-  if(!token||!chat) return toast('⚠️ أدخل Token و Chat ID',true);
-  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
-  const date=new Date().toISOString().split('T')[0];
-  const fd=new FormData();
-  fd.append('chat_id',chat);
-  fd.append('document',blob,`store-${date}.json`);
-  fd.append('caption',`📦 نسخة احتياطية\n📅 ${date}\n🛒 ${db.products.length} منتج\n🧾 ${db.invoices.length} فاتورة\n💸 ${db.expenses.length} مصروف`);
-  try{
-    toast('⏳ جاري الإرسال...');
-    const res=await fetch(`https://api.telegram.org/bot${token}/sendDocument`,{method:'POST',body:fd});
-    const d=await res.json();
-    if(d.ok) toast('✅ تم الإرسال بنجاح');
-    else toast('❌ '+(d.description||'فشل الإرسال'),true);
-  }catch{toast('❌ خطأ في الاتصال',true);}
 }
 
 // ═══ MODALS ═══
