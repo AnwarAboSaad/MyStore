@@ -537,7 +537,7 @@ let curInv=null;
 function loadDB(){
   const s=localStorage.getItem('mstore');
   if(s) db=JSON.parse(s);
-  document.getElementById('exp-date').valueAsDate=new Date();
+  document.getElementById('exp-date').value = new Date().toISOString().split('T')[0];
 }
 function saveDB(){ localStorage.setItem('mstore',JSON.stringify(db)); }
 
