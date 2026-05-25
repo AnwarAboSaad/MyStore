@@ -90,13 +90,20 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
 
 /* ── FORM ── */
 .form-col{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row{display:flex;gap:10px;width:100%}
+.form-row .fg{flex:1;min-width:0}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fg label{font-size:12px;color:var(--sub);font-weight:600}
 .fg input,.fg select,.fg textarea{
   background:var(--bg);border:1px solid var(--border);border-radius:10px;
-  padding:11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;
-  width:100%;transition:.2s;
+  padding:11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;
+  width:100%;min-width:0;box-sizing:border-box;transition:.2s;
+  -webkit-appearance:none;appearance:none;
+}
+input[type="date"]{
+  height:44px;padding:0 12px;
+  font-size:13px;color:var(--text);
+  direction:ltr;text-align:right;
 }
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--A);box-shadow:0 0 0 3px rgba(246,168,50,.1)}
 .fg select option{background:var(--s2)}
@@ -293,9 +300,9 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
     <!-- ═══ DASHBOARD ═══ -->
     <div id="pg-home" class="page active">
       <div class="stats-row">
-        <div class="stat-card sc-gold"><div class="stat-lbl">إجمالي المبيعات</div><div class="stat-val sv-gold" id="ds-sales">0</div></div>
-        <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ds-exp">0</div></div>
-        <div class="stat-card sc-green"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ds-profit">0</div></div>
+        <div class="stat-card sc-gold"><div class="stat-lbl">إجمالي المبيعات</div><div class="stat-val sv-gold" id="ds-sales">0 ₪</div></div>
+        <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ds-exp">0 ₪</div></div>
+        <div class="stat-card sc-green"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ds-profit">0 ₪</div></div>
         <div class="stat-card sc-blue"><div class="stat-lbl">المنتجات</div><div class="stat-val sv-blue" id="ds-prods">0</div></div>
       </div>
       <div class="card">
@@ -398,9 +405,9 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
       </div>
       <div id="iv-result" style="display:none">
         <div class="stats-row">
-          <div class="stat-card sc-gold"><div class="stat-lbl">المبيعات</div><div class="stat-val sv-gold" id="ir-s">0</div></div>
-          <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ir-e">0</div></div>
-          <div class="stat-card sc-green" style="grid-column:1/-1"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ir-p">0</div></div>
+          <div class="stat-card sc-gold"><div class="stat-lbl">المبيعات</div><div class="stat-val sv-gold" id="ir-s">0 ₪</div></div>
+          <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ir-e">0 ₪</div></div>
+          <div class="stat-card sc-green" style="grid-column:1/-1"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ir-p">0 ₪</div></div>
         </div>
         <div class="card" id="iv-inv-card" style="display:none">
           <div class="sec-title">تفاصيل الفواتير</div>
@@ -459,13 +466,13 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
   <div class="sheet-body" id="cart-body"></div>
   <div class="sheet-foot">
     <div class="disc-row">
-      <input type="number" id="discount" placeholder="خصم" inputmode="decimal" oninput="renderCart()" style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px">
+      <input type="number" id="discount" placeholder="خصم ₪" inputmode="decimal" oninput="renderCart()" style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px">
     </div>
     <div class="total-lines">
-      <div class="tl"><span>المجموع</span><span id="cart-sub">0</span></div>
-      <div class="tl"><span style="color:var(--A2)">الخصم</span><span id="cart-disc" style="color:var(--A2)">0</span></div>
+      <div class="tl"><span>المجموع</span><span id="cart-sub">0 ₪</span></div>
+      <div class="tl"><span style="color:var(--A2)">الخصم</span><span id="cart-disc" style="color:var(--A2)">0 ₪</span></div>
     </div>
-    <div class="tl big" style="margin-bottom:12px"><span>الإجمالي</span><span id="cart-total" style="color:var(--A)">0</span></div>
+    <div class="tl big" style="margin-bottom:12px"><span>الإجمالي</span><span id="cart-total" style="color:var(--A)">0 ₪</span></div>
     <button class="btn btn-primary btn-full" style="margin-bottom:8px" onclick="checkout()">✅ إتمام البيع</button>
     <button class="btn btn-ghost btn-full" onclick="clearCart()">🗑️ إفراغ السلة</button>
   </div>
@@ -490,8 +497,8 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
       </div>
       <div class="fg"><label>اسم المنتج *</label><input type="text" id="p-name" placeholder="اسم المنتج"></div>
       <div class="form-row">
-        <div class="fg"><label>سعر الشراء</label><input type="number" id="p-buy" placeholder="0" inputmode="decimal"></div>
-        <div class="fg"><label>سعر البيع</label><input type="number" id="p-sell" placeholder="0" inputmode="decimal"></div>
+        <div class="fg"><label>سعر الشراء ₪</label><input type="number" id="p-buy" placeholder="0" inputmode="decimal"></div>
+        <div class="fg"><label>سعر البيع ₪</label><input type="number" id="p-sell" placeholder="0" inputmode="decimal"></div>
       </div>
       <div class="fg"><label>الكمية المتوفرة</label><input type="number" id="p-qty" placeholder="0" inputmode="numeric"></div>
       <div class="fg">
@@ -513,9 +520,8 @@ html,body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;backgroun
     <div class="modal-handle"></div>
     <div class="modal-title">🧾 تفاصيل الفاتورة</div>
     <div id="inv-modal-body"></div>
-    <div style="display:flex;gap:8px;margin-top:16px">
-      <button class="btn btn-primary" style="flex:1" onclick="printInv()">🖨️ طباعة</button>
-      <button class="btn btn-ghost" onclick="closeModal('inv-modal')">إغلاق</button>
+    <div style="margin-top:16px">
+      <button class="btn btn-ghost btn-full" onclick="closeModal('inv-modal')">إغلاق</button>
     </div>
   </div>
 </div>
@@ -632,7 +638,7 @@ function updateDash(){
   document.getElementById('dash-invs').innerHTML=ri.length?ri.map(i=>`
     <div class="list-row" onclick="viewInvoice(${i.id})" style="cursor:pointer">
       <span style="font-size:22px">🧾</span>
-      <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.date} • ${i.items.length} صنف</div></div>
+      <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.displayDate||i.date} • ${i.items.length} صنف</div></div>
       <div class="row-price">${fmt(i.total)}</div>
     </div>`).join(''):`<div class="empty"><div class="ei">🧾</div><p>لا توجد فواتير بعد</p></div>`;
   // low stock
@@ -790,12 +796,15 @@ function checkout(){
   const sub=cart.reduce((a,c)=>a+c.price*c.qty,0);
   const total=Math.max(0,sub-disc);
   const now=new Date();
+  const isoDate=now.toISOString().split('T')[0]; // YYYY-MM-DD للمقارنة
+  const displayDate=now.toLocaleDateString('ar-EG'); // للعرض
   const inv={
     id:db.ni++,
-    date:now.toLocaleDateString('ar-EG'),
+    date:isoDate,
+    displayDate:displayDate,
     time:now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}),
     items:cart.map(c=>({...c})),
-    discount:disc, subtotal:sub, total
+    discount:disc,subtotal:sub,total
   };
   cart.forEach(c=>{const p=db.products.find(x=>x.id===c.pid);if(p) p.qty-=c.qty;});
   db.invoices.push(inv);
@@ -813,7 +822,7 @@ function renderInvoices(){
       <span style="font-size:22px">🧾</span>
       <div class="row-info">
         <div class="row-title">فاتورة #${i.id}</div>
-        <div class="row-sub">${i.date} ${i.time||''} • ${i.items.length} أصناف</div>
+        <div class="row-sub">${i.displayDate||i.date} ${i.time||''} • ${i.items.length} أصناف</div>
       </div>
       <div class="row-price">${fmt(i.total)}</div>
     </div>`).join('')+`</div>`
@@ -823,7 +832,7 @@ function viewInvoice(id){
   curInv=db.invoices.find(i=>i.id===id); if(!curInv) return;
   const body=document.getElementById('inv-modal-body');
   body.innerHTML=`
-    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">فاتورة #${curInv.id} • ${curInv.date} ${curInv.time||''}</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">فاتورة #${curInv.id} • ${curInv.displayDate||curInv.date} ${curInv.time||''}</div>
     ${curInv.items.map(it=>`
       <div class="list-row">
         <div class="row-info"><div class="row-title">${it.name}</div><div class="row-sub">${fmt(it.price)} × ${it.qty}</div></div>
@@ -890,18 +899,21 @@ function renderExpenses(){
 
 // ═══ INVENTORY ═══
 function runInventory(){
-  const from=document.getElementById('iv-from').value;
+  const from=document.getElementById('iv-from').value; // YYYY-MM-DD
   const to=document.getElementById('iv-to').value;
   const type=document.getElementById('iv-type').value;
   let invs=db.invoices;
   let exps=db.expenses;
-  if(from){invs=invs.filter(i=>parseDate(i.date)>=from); exps=exps.filter(e=>e.date>=from);}
-  if(to){invs=invs.filter(i=>parseDate(i.date)<=to); exps=exps.filter(e=>e.date<=to);}
+  // i.date is now stored as ISO (YYYY-MM-DD), direct string compare works
+  if(from){ invs=invs.filter(i=>i.date>=from); exps=exps.filter(e=>e.date>=from); }
+  if(to){   invs=invs.filter(i=>i.date<=to);   exps=exps.filter(e=>e.date<=to); }
   const st=invs.reduce((a,i)=>a+i.total,0);
   const et=exps.reduce((a,e)=>a+e.amount,0);
+  let buyCost=0;
+  invs.forEach(inv=>{ inv.items.forEach(item=>{ const prod=db.products.find(p=>p.id===item.pid); if(prod) buyCost+=(prod.buy||0)*item.qty; }); });
   document.getElementById('ir-s').textContent=fmt(st);
   document.getElementById('ir-e').textContent=fmt(et);
-  document.getElementById('ir-p').textContent=fmt(st-et);
+  document.getElementById('ir-p').textContent=fmt(st-et-buyCost);
   const ic=document.getElementById('iv-inv-card');
   const ec=document.getElementById('iv-exp-card');
   if(type!=='expenses'){
@@ -909,10 +921,10 @@ function runInventory(){
     document.getElementById('iv-inv-list').innerHTML=invs.length?invs.map(i=>`
       <div class="list-row" onclick="viewInvoice(${i.id})" style="cursor:pointer">
         <span style="font-size:20px">🧾</span>
-        <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.date}</div></div>
+        <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.displayDate||i.date}</div></div>
         <div class="row-price">${fmt(i.total)}</div>
       </div>`).join(''):`<div style="text-align:center;padding:12px;color:var(--sub);font-size:13px">لا توجد فواتير</div>`;
-  } else {ic.style.display='none';}
+  } else ic.style.display='none';
   if(type!=='invoices'){
     ec.style.display='block';
     document.getElementById('iv-exp-list').innerHTML=exps.length?exps.map(e=>`
@@ -921,12 +933,8 @@ function runInventory(){
         <div class="row-info"><div class="row-title">${e.type}</div><div class="row-sub">${e.date}</div></div>
         <span style="color:var(--A2);font-weight:700">${fmt(e.amount)}</span>
       </div>`).join(''):`<div style="text-align:center;padding:12px;color:var(--sub);font-size:13px">لا توجد مصاريف</div>`;
-  } else {ec.style.display='none';}
+  } else ec.style.display='none';
   document.getElementById('iv-result').style.display='block';
-}
-function parseDate(d){
-  try{const p=d.split('/');if(p.length===3) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;}catch(e){}
-  return d;
 }
 
 // ═══ BACKUP ═══
@@ -960,7 +968,7 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
 });
 
 // ═══ UTILS ═══
-function fmt(n){return(n||0).toLocaleString('ar-SA',{minimumFractionDigits:0})+'';}
+function fmt(n){return(n||0).toLocaleString('ar-SA',{minimumFractionDigits:0})+' ₪';}
 function toast(msg,err=false){
   const t=document.getElementById('toast');
   t.textContent=msg;
