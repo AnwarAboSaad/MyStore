@@ -898,15 +898,27 @@ function renderExpenses(){
 }
 
 // ═══ INVENTORY ═══
+function toISO(d){
+  if(!d) return '';
+  // already ISO: 2026-05-25
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+  // Arabic locale like ٢٥/٥/٢٠٢٦ or 25/5/2026
+  const normalized = d.replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c));
+  const parts = normalized.split('/');
+  if(parts.length===3){
+    const [day,month,year] = parts;
+    return `${year.padStart(4,'0')}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+  }
+  return d;
+}
 function runInventory(){
-  const from=document.getElementById('iv-from').value; // YYYY-MM-DD
+  const from=document.getElementById('iv-from').value;
   const to=document.getElementById('iv-to').value;
   const type=document.getElementById('iv-type').value;
   let invs=db.invoices;
   let exps=db.expenses;
-  // i.date is now stored as ISO (YYYY-MM-DD), direct string compare works
-  if(from){ invs=invs.filter(i=>i.date>=from); exps=exps.filter(e=>e.date>=from); }
-  if(to){   invs=invs.filter(i=>i.date<=to);   exps=exps.filter(e=>e.date<=to); }
+  if(from){ invs=invs.filter(i=>toISO(i.date)>=from); exps=exps.filter(e=>toISO(e.date)>=from); }
+  if(to){   invs=invs.filter(i=>toISO(i.date)<=to);   exps=exps.filter(e=>toISO(e.date)<=to); }
   const st=invs.reduce((a,i)=>a+i.total,0);
   const et=exps.reduce((a,e)=>a+e.amount,0);
   let buyCost=0;
