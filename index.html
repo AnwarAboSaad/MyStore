@@ -588,6 +588,8 @@ function colorDot(name,size=10){
 function loadDB(){
   const s=localStorage.getItem('mstore');
   if(s) db=JSON.parse(s);
+  migrateDates(); // تحويل التواريخ القديمة لـ ISO
+  saveDB();       // حفظ البيانات بعد التحويل
   document.getElementById('exp-date').value=new Date().toISOString().split('T')[0];
   updateBackupStats();
 }
@@ -655,7 +657,7 @@ function updateDash(){
   document.getElementById('dash-invs').innerHTML=ri.length?ri.map(i=>`
     <div class="list-row" onclick="viewInvoice(${i.id})" style="cursor:pointer">
       <span style="font-size:22px">🧾</span>
-      <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.displayDate||i.date} • ${i.items.length} صنف</div></div>
+      <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.date} • ${i.items.length} صنف</div></div>
       <div class="row-price">${fmt(i.total)}</div>
     </div>`).join(''):`<div class="empty"><div class="ei">🧾</div><p>لا توجد فواتير بعد</p></div>`;
   // low stock
@@ -813,13 +815,12 @@ function checkout(){
   const sub=cart.reduce((a,c)=>a+c.price*c.qty,0);
   const total=Math.max(0,sub-disc);
   const now=new Date();
-  const isoDate=now.toISOString().split('T')[0]; // YYYY-MM-DD للمقارنة
-  const displayDate=now.toLocaleDateString('ar-EG'); // للعرض
+  const isoDate=now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const isoTime=now.toTimeString().slice(0,5);   // HH:MM
   const inv={
     id:db.ni++,
     date:isoDate,
-    displayDate:displayDate,
-    time:now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}),
+    time:isoTime,
     items:cart.map(c=>({...c})),
     discount:disc,subtotal:sub,total
   };
@@ -839,7 +840,7 @@ function renderInvoices(){
       <span style="font-size:22px">🧾</span>
       <div class="row-info">
         <div class="row-title">فاتورة #${i.id}</div>
-        <div class="row-sub">${i.displayDate||i.date} ${i.time||''} • ${i.items.length} أصناف</div>
+        <div class="row-sub">${i.date} ${i.time||''} • ${i.items.length} أصناف</div>
       </div>
       <div class="row-price">${fmt(i.total)}</div>
     </div>`).join('')+`</div>`
@@ -849,7 +850,7 @@ function viewInvoice(id){
   curInv=db.invoices.find(i=>i.id===id); if(!curInv) return;
   const body=document.getElementById('inv-modal-body');
   body.innerHTML=`
-    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">فاتورة #${curInv.id} • ${curInv.displayDate||curInv.date} ${curInv.time||''}</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">فاتورة #${curInv.id} • ${curInv.date} ${curInv.time||''}</div>
     ${curInv.items.map(it=>`
       <div class="list-row">
         <div class="row-info"><div class="row-title">${it.name}</div><div class="row-sub">${fmt(it.price)} × ${it.qty}</div></div>
@@ -914,33 +915,40 @@ function renderExpenses(){
     </div>`).join(''):`<div class="empty" style="padding:16px 0"><div class="ei">💸</div><p>لا توجد مصاريف</p></div>`;
 }
 
-// ═══ INVENTORY ═══
-function toISO(d){
+// ═══ MIGRATE OLD DATES TO ISO ═══
+// يحول أي تاريخ قديم (عربي أو مقلوب) إلى YYYY-MM-DD
+function anyToISO(d){
   if(!d) return '';
   d = String(d).trim();
-  // already ISO: 2026-05-25
-  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-  // convert Eastern Arabic numerals ٠١٢٣٤٥٦٧٨٩ to Western
-  const ar='٠١٢٣٤٥٦٧٨٩';
-  d = d.replace(/[٠-٩]/g, c => ar.indexOf(c).toString());
-  const parts = d.split(/[\/\-\.]/);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d; // already ISO
+  // Eastern Arabic → Western digits
+  d = d.replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c).toString());
+  // remove any non-digit separator noise, split on / or - or .
+  const parts = d.split(/[\/\.\-\s]+/).map(p=>parseInt(p,10)).filter(n=>!isNaN(n));
   if(parts.length===3){
-    const p0=parseInt(parts[0]), p1=parseInt(parts[1]), p2=parseInt(parts[2]);
-    // Year/Month/Day (e.g. 2026/5/25)
-    if(p0>31){ return `${p0}-${String(p1).padStart(2,'0')}-${String(p2).padStart(2,'0')}`; }
-    // Day/Month/Year (e.g. 25/5/2026)
-    if(p2>31){ return `${p2}-${String(p1).padStart(2,'0')}-${String(p0).padStart(2,'0')}`; }
+    const [a,b,c] = parts;
+    if(a>31) return `${a}-${String(b).padStart(2,'0')}-${String(c).padStart(2,'0')}`;  // Y/M/D
+    if(c>31) return `${c}-${String(b).padStart(2,'0')}-${String(a).padStart(2,'0')}`;  // D/M/Y
   }
-  return d;
+  // fallback: try JS Date parse
+  const parsed = new Date(d);
+  if(!isNaN(parsed)) return parsed.toISOString().split('T')[0];
+  return '';
 }
+function migrateDates(){
+  db.invoices.forEach(i=>{ i.date = anyToISO(i.date)||i.date; delete i.displayDate; });
+  db.expenses.forEach(e=>{ e.date = anyToISO(e.date)||e.date; });
+}
+
+// ═══ INVENTORY ═══
 function runInventory(){
-  const from=document.getElementById('iv-from').value;
+  const from=document.getElementById('iv-from').value; // YYYY-MM-DD
   const to=document.getElementById('iv-to').value;
   const type=document.getElementById('iv-type').value;
-  let invs=db.invoices;
-  let exps=db.expenses;
-  if(from){ invs=invs.filter(i=>toISO(i.date)>=from); exps=exps.filter(e=>toISO(e.date)>=from); }
-  if(to){   invs=invs.filter(i=>toISO(i.date)<=to);   exps=exps.filter(e=>toISO(e.date)<=to); }
+  let invs=[...db.invoices];
+  let exps=[...db.expenses];
+  if(from){ invs=invs.filter(i=>i.date>=from); exps=exps.filter(e=>e.date>=from); }
+  if(to){   invs=invs.filter(i=>i.date<=to);   exps=exps.filter(e=>e.date<=to); }
   const st=invs.reduce((a,i)=>a+i.total,0);
   const et=exps.reduce((a,e)=>a+e.amount,0);
   let buyCost=0;
@@ -955,7 +963,7 @@ function runInventory(){
     document.getElementById('iv-inv-list').innerHTML=invs.length?invs.map(i=>`
       <div class="list-row" onclick="viewInvoice(${i.id})" style="cursor:pointer">
         <span style="font-size:20px">🧾</span>
-        <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.displayDate||i.date}</div></div>
+        <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.date} ${i.time||''}</div></div>
         <div class="row-price">${fmt(i.total)}</div>
       </div>`).join(''):`<div style="text-align:center;padding:12px;color:var(--sub);font-size:13px">لا توجد فواتير</div>`;
   } else ic.style.display='none';
