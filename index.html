@@ -1085,30 +1085,39 @@ function toast(msg,err=false){
 }
 
 // ═══ LOCK SYSTEM ═══
-// ⚙️ لتغيير كلمة المرور أو كود التفعيل، غيّر القيم هنا فقط:
-const PASS_HASH    = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // كلمة المرور: admin
-const ACTIV_HASH   = 'b94d27b9934d3e08a52e52d7da7dabfac484efe04294e576b05d02ca2af15f62'; // كود التفعيل: activate2024
-// لتغيير كلمة المرور: ابعت لـ Claude الكلمة الجديدة وبيعطيك الـ hash
+// ⚙️ غيّر هذه القيم فقط:
+const PASS_HASH  = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // كلمة المرور: admin
+const ACTIV_HASH = 'b94d27b9934d3e08a52e52d7da7dabfac484efe04294e576b05d02ca2af15f62'; // كود التفعيل: activate2024
+const EXPIRY_DAYS = 365; // مدة الترخيص بالأيام
+const WARN_DAYS   = 30;  // إنذار قبل كم يوم
 
 async function sha256(msg){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-function getDeviceId(){
-  let id=localStorage.getItem('_did');
-  if(!id){ id=crypto.randomUUID(); localStorage.setItem('_did',id); }
-  return id;
+
+function getActivation(){
+  const raw=localStorage.getItem('_actv');
+  if(!raw) return null;
+  try{ return JSON.parse(raw); }catch{ return null; }
 }
-function isActivated(){
-  // الجهاز مفعّل إذا محفوظ في localStorage
-  return localStorage.getItem('_act')==='1';
+function saveActivation(){
+  localStorage.setItem('_actv', JSON.stringify({ date: Date.now() }));
 }
+function daysLeft(){
+  const a=getActivation();
+  if(!a) return -1;
+  const diff=EXPIRY_DAYS - Math.floor((Date.now()-a.date)/(1000*60*60*24));
+  return diff;
+}
+
 function switchLockTab(tab){
   document.querySelectorAll('.lock-tab').forEach((t,i)=>t.classList.toggle('active',(i===(tab==='login'?0:1))));
   document.getElementById('tab-login').style.display=tab==='login'?'block':'none';
   document.getElementById('tab-activate').style.display=tab==='activate'?'block':'none';
   document.getElementById('lock-sub').textContent=tab==='login'?'أدخل كلمة المرور للدخول':'فعّل جهازك بكود التفعيل';
 }
+
 async function doLogin(){
   const pass=document.getElementById('lock-pass').value;
   const err=document.getElementById('lock-err-login');
@@ -1116,12 +1125,13 @@ async function doLogin(){
   const h=await sha256(pass);
   if(h===PASS_HASH){
     err.textContent='';
-    document.getElementById('lock-screen').classList.add('hidden');
+    unlockApp();
   } else {
     err.textContent='❌ كلمة المرور غير صحيحة';
     document.getElementById('lock-pass').value='';
   }
 }
+
 async function doActivate(){
   const code=document.getElementById('lock-acode').value.trim();
   const pass=document.getElementById('lock-apass').value;
@@ -1130,26 +1140,65 @@ async function doActivate(){
   const ch=await sha256(code);
   const ph=await sha256(pass);
   if(ch===ACTIV_HASH && ph===PASS_HASH){
-    localStorage.setItem('_act','1');
+    saveActivation();
     err.textContent='';
-    document.getElementById('lock-screen').classList.add('hidden');
+    unlockApp();
   } else {
     err.textContent='❌ الكود أو كلمة المرور غير صحيحة';
     document.getElementById('lock-acode').value='';
     document.getElementById('lock-apass').value='';
   }
 }
+
+function unlockApp(){
+  document.getElementById('lock-screen').classList.add('hidden');
+  // إظهار إنذار انتهاء الترخيص إذا اقترب
+  const left=daysLeft();
+  if(left>0 && left<=WARN_DAYS){
+    setTimeout(()=>showExpiryWarning(left), 800);
+  }
+}
+
+function showExpiryWarning(days){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML=`
+    <div style="background:var(--s1);border:1px solid var(--A2);border-radius:16px;padding:24px;max-width:320px;width:100%;text-align:center">
+      <div style="font-size:44px;margin-bottom:8px">⚠️</div>
+      <div style="font-size:17px;font-weight:900;color:var(--A2);margin-bottom:8px">تنبيه انتهاء الترخيص</div>
+      <div style="font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:20px">
+        باقي على انتهاء ترخيص هذا الجهاز<br>
+        <strong style="font-size:24px;color:var(--A)">${days}</strong> يوم<br>
+        تواصل مع المورد لتجديد التفعيل قبل انتهاء المدة.
+      </div>
+      <button class="btn btn-primary btn-full" onclick="this.closest('div').parentElement.remove()">حسناً، فهمت</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
 function initLock(){
-  if(isActivated()){
-    // جهاز مفعّل سابقاً → يطلب كلمة المرور فقط
+  const left=daysLeft();
+
+  if(left<0){
+    // جهاز جديد أو لم يُفعَّل بعد
+    document.getElementById('lock-tabs').style.display='none';
+    switchLockTab('activate');
+    document.getElementById('lock-sub').textContent='جهاز جديد — أدخل كود التفعيل وكلمة المرور';
+
+  } else if(left===0){
+    // انتهى الترخيص اليوم
+    document.getElementById('lock-tabs').style.display='none';
+    switchLockTab('activate');
+    document.getElementById('lock-sub').textContent='⚠️ انتهى ترخيص هذا الجهاز — أدخل كود التفعيل الجديد';
+    localStorage.removeItem('_actv'); // مسح التفعيل القديم
+
+  } else {
+    // جهاز مفعّل وصالح → كلمة مرور فقط
     document.getElementById('lock-tabs').style.display='none';
     document.getElementById('tab-activate').style.display='none';
     document.getElementById('tab-login').style.display='block';
-  } else {
-    // جهاز جديد → يطلب كود التفعيل
-    switchLockTab('activate');
-    document.getElementById('lock-tabs').style.display='none'; // إخفاء التابز، مباشرة لتفعيل
-    document.getElementById('lock-sub').textContent='جهاز جديد — أدخل كود التفعيل وكلمة المرور';
+    document.getElementById('lock-sub').textContent='أدخل كلمة المرور للدخول';
   }
 }
 
