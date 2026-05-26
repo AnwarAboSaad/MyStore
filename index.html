@@ -7,135 +7,57 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="متجري">
 <meta name="theme-color" content="#0d0d14">
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AnwarAboSaad/MyStore/main/logo.png">
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AnwarAboSaad/MyStore/main/logo.png">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AnwarAboSaad/MyStore/main/logo.PNG">
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/AnwarAboSaad/MyStore/main/logo.PNG">
 <title>متجري</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0d0d14;
-  --s1:#13131e;
-  --s2:#1a1a28;
-  --s3:#222234;
-  --border:#2e2e48;
-  --A:#f6a832;
-  --A2:#ff4d6d;
-  --G:#22c55e;
-  --B:#3b82f6;
-  --text:#eeeef8;
-  --sub:#9191b4;
-  --r:14px;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#0d0d14;--s1:#13131e;--s2:#1a1a28;--s3:#222234;--border:#2e2e48;
+  --A:#f6a832;--A2:#ff4d6d;--G:#22c55e;--B:#3b82f6;
+  --text:#eeeef8;--sub:#9191b4;--r:14px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
-  -webkit-touch-callout:none;}
-html{
-  height:100%;overflow:hidden;
-  touch-action:pan-y; /* منع الزوم بإيماءة الإصبعين */
-  -ms-touch-action:pan-y;
-}
-body{
-  height:100%;overflow:hidden;
-  font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);
-  touch-action:pan-y;
-}
-
-/* ── SHELL ── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{height:100%;overflow:hidden;touch-action:pan-y}
+body{height:100%;overflow:hidden;font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);touch-action:pan-y}
 #shell{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden;touch-action:pan-y}
-
-/* ── TOP BAR ── */
-#topbar{
-  background:var(--s1);
-  border-bottom:1px solid var(--border);
-  padding:14px 16px 10px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
+#topbar{background:var(--s1);border-bottom:1px solid var(--border);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 #topbar .page-title{font-size:18px;font-weight:900;color:var(--text)}
 #topbar .store-name{font-size:12px;color:var(--A);font-weight:700}
 #topbar .top-right{display:flex;gap:8px}
-
-/* ── SCROLL AREA ── */
-#scroll-area{
-  flex:1;
-  overflow-y:auto;overflow-x:hidden;
-  padding:12px 14px;padding-bottom:80px;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  touch-action:pan-y;
-}
+#scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 14px;padding-bottom:80px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
 #scroll-area::-webkit-scrollbar{display:none}
-
-/* ── BOTTOM NAV ── */
-#bottom-nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:480px;
-  background:var(--s1);
-  border-top:1px solid var(--border);
-  display:flex;
-  padding-bottom:calc(8px + var(--safe-bottom));
-  z-index:50;
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;
-  gap:3px;padding:10px 4px 6px;
-  cursor:pointer;border:none;background:none;
-  color:var(--sub);font-family:'Tajawal',sans-serif;
-  transition:.2s;
-}
+#bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--s1);border-top:1px solid var(--border);display:flex;padding-bottom:calc(8px + var(--safe-bottom));z-index:50}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 6px;cursor:pointer;border:none;background:none;color:var(--sub);font-family:'Tajawal',sans-serif;transition:.2s}
 .nav-btn .ico{font-size:22px;line-height:1}
 .nav-btn .lbl{font-size:10px;font-weight:600}
 .nav-btn.active{color:var(--A)}
 .nav-btn.active .ico{transform:scale(1.1)}
-
-/* ── PAGES ── */
 .page{display:none;animation:fadeIn .2s ease}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-/* ── STATS ROW ── */
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .stat-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px 12px;position:relative;overflow:hidden}
 .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
-.sc-gold::after{background:var(--A)}
-.sc-red::after{background:var(--A2)}
-.sc-green::after{background:var(--G)}
-.sc-blue::after{background:var(--B)}
+.sc-gold::after{background:var(--A)}.sc-red::after{background:var(--A2)}.sc-green::after{background:var(--G)}.sc-blue::after{background:var(--B)}
 .stat-lbl{font-size:11px;color:var(--sub);margin-bottom:5px}
 .stat-val{font-size:20px;font-weight:900;line-height:1}
 .sv-gold{color:var(--A)}.sv-red{color:var(--A2)}.sv-green{color:var(--G)}.sv-blue{color:var(--B)}
-
-/* ── CARD ── */
 .card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
 .sec-title{font-size:12px;font-weight:700;color:var(--A);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-
-/* ── FORM ── */
 .form-col{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
 .form-row{display:flex;gap:10px;width:100%}
 .form-row .fg{flex:1;min-width:0}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fg label{font-size:12px;color:var(--sub);font-weight:600}
-.fg input,.fg select,.fg textarea{
-  background:var(--bg);border:1px solid var(--border);border-radius:10px;
-  padding:11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;
-  width:100%;min-width:0;box-sizing:border-box;transition:.2s;
-  -webkit-appearance:none;appearance:none;
-}
-input[type="date"]{
-  height:44px;padding:0 12px;
-  font-size:13px;color:var(--text);
-  direction:ltr;text-align:right;
-}
+.fg input,.fg select,.fg textarea{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;width:100%;min-width:0;box-sizing:border-box;transition:.2s;-webkit-appearance:none;appearance:none}
+input[type="date"]{height:44px;padding:0 12px;font-size:13px;color:var(--text);direction:ltr;text-align:right}
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--A);box-shadow:0 0 0 3px rgba(246,168,50,.1)}
 .fg select option{background:var(--s2)}
 .img-prev{width:70px;height:70px;border-radius:10px;object-fit:cover;border:1px solid var(--border);display:none;margin-top:4px}
 .img-prev.show{display:block}
-
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  padding:12px 18px;border-radius:10px;border:none;cursor:pointer;
-  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;transition:.15s;
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:10px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;transition:.15s}
 .btn:active{transform:scale(.96)}
 .btn-full{width:100%}
 .btn-primary{background:var(--A);color:#000}
@@ -143,55 +65,29 @@ input[type="date"]{
 .btn-ghost{background:var(--s3);color:var(--text);border:1px solid var(--border)}
 .btn-success{background:var(--G);color:#000}
 .btn-sm{padding:7px 12px;font-size:13px;border-radius:8px}
-
-/* ── LIST ROWS ── */
-.list-row{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);
-}
+.list-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .list-row:last-child{border:none}
-.row-img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:20px}
+.row-img{width:44px;height:44px;border-radius:10px;flex-shrink:0;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:20px}
 .row-img img{width:44px;height:44px;border-radius:10px;object-fit:cover}
 .row-info{flex:1;min-width:0}
 .row-title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-sub{font-size:12px;color:var(--sub);margin-top:2px}
-.row-right{text-align:left;flex-shrink:0}
 .row-price{font-size:15px;font-weight:900;color:var(--A)}
 .row-actions{display:flex;gap:6px}
-
-/* ── BADGE ── */
 .badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
 .b-green{background:rgba(34,197,94,.15);color:var(--G)}
 .b-red{background:rgba(255,77,109,.15);color:var(--A2)}
 .b-gold{background:rgba(246,168,50,.15);color:var(--A)}
 .b-blue{background:rgba(59,130,246,.15);color:var(--B)}
-
-/* ── POS ── */
-.pos-search{margin-bottom:12px}
 .pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:60px}
-.pos-item{
-  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);
-  padding:12px;cursor:pointer;transition:.15s;text-align:center;
-  position:relative;
-}
+.pos-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:.15s;text-align:center}
 .pos-item:active{transform:scale(.97);border-color:var(--A)}
 .pos-item img,.pos-item .pos-emoji{width:56px;height:56px;border-radius:10px;object-fit:cover;margin:0 auto 8px;display:block}
 .pos-emoji{font-size:36px;line-height:56px;background:var(--s3);border-radius:10px}
 .pos-name{font-size:13px;font-weight:700;margin-bottom:3px}
 .pos-price{font-size:14px;font-weight:900;color:var(--A)}
 .pos-stock{font-size:11px;color:var(--sub);margin-top:2px}
-.pos-out{opacity:.4;pointer-events:none}
-
-/* ── CART SHEET ── */
-#cart-sheet{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);
-  width:100%;max-width:480px;
-  background:var(--s1);border-radius:20px 20px 0 0;
-  border-top:1px solid var(--border);
-  padding:0 0 calc(16px + var(--safe-bottom));
-  z-index:60;transition:transform .3s cubic-bezier(.4,0,.2,1);
-  max-height:85vh;display:flex;flex-direction:column;
-}
+#cart-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--s1);border-radius:20px 20px 0 0;border-top:1px solid var(--border);padding:0 0 calc(16px + var(--safe-bottom));z-index:60;transition:transform .3s cubic-bezier(.4,0,.2,1);max-height:85vh;display:flex;flex-direction:column}
 #cart-sheet.open{transform:translateX(-50%) translateY(0)}
 .sheet-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 14px}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;border-bottom:1px solid var(--border)}
@@ -214,163 +110,55 @@ input[type="date"]{
 .tl{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-bottom:4px}
 .tl.big{font-size:18px;font-weight:900;color:var(--A)}
 .tl.big span{color:var(--text)}
-
-/* Cart FAB */
-#cart-fab{
-  position:fixed;bottom:calc(72px + var(--safe-bottom));
-  left:50%;transform:translateX(-50%);
-  background:var(--A);color:#000;
-  border:none;border-radius:50px;
-  padding:13px 20px;
-  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;
-  cursor:pointer;display:none;align-items:center;gap:8px;
-  box-shadow:0 4px 24px rgba(246,168,50,.4);
-  z-index:55;transition:.2s;
-  white-space:nowrap;
-}
+#cart-fab{position:fixed;bottom:calc(72px + var(--safe-bottom));left:50%;transform:translateX(-50%);background:var(--A);color:#000;border:none;border-radius:50px;padding:13px 20px;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:900;cursor:pointer;display:none;align-items:center;gap:8px;box-shadow:0 4px 24px rgba(246,168,50,.4);z-index:55;transition:.2s;white-space:nowrap}
 #cart-fab.show{display:flex}
 #cart-fab:active{transform:translateX(-50%) scale(.96)}
-#cart-fab .cart-count{
-  background:#000;color:var(--A);
-  width:22px;height:22px;border-radius:50%;
-  font-size:12px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* ── MODAL ── */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.75);
-  display:flex;align-items:flex-end;justify-content:center;
-  z-index:70;opacity:0;pointer-events:none;transition:.2s;
-}
+#cart-fab .cart-count{background:#000;color:var(--A);width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:70;opacity:0;pointer-events:none;transition:.2s}
 .modal-overlay.show{opacity:1;pointer-events:all}
-.modal{
-  background:var(--s1);border-radius:20px 20px 0 0;
-  border-top:1px solid var(--border);
-  padding:0 16px calc(20px + var(--safe-bottom));
-  width:100%;max-width:480px;
-  max-height:90vh;overflow-y:auto;
-  transform:translateY(60px);transition:.3s;
-}
+.modal{background:var(--s1);border-radius:20px 20px 0 0;border-top:1px solid var(--border);padding:0 16px calc(20px + var(--safe-bottom));width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:translateY(60px);transition:.3s}
 .modal-overlay.show .modal{transform:none}
 .modal-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 16px}
 .modal-title{font-size:17px;font-weight:900;margin-bottom:16px}
-
-/* ── STEPS (telegram) ── */
-.step{display:flex;gap:10px;margin-bottom:14px}
-.step-n{width:26px;height:26px;border-radius:50%;background:var(--A);color:#000;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step p{font-size:13px;color:var(--sub);line-height:1.6}
-.step code{background:var(--s3);padding:2px 6px;border-radius:5px;color:var(--text);font-size:12px}
-
-/* ── SEARCH ── */
 .search-wrap{position:relative;margin-bottom:12px}
 .search-wrap input{padding-right:38px}
 .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:16px;pointer-events:none}
-
-/* ── DIVIDER ── */
 .div{border:none;border-top:1px solid var(--border);margin:12px 0}
-
-/* ── EMPTY STATE ── */
 .empty{text-align:center;padding:40px 20px;color:var(--sub)}
 .empty .ei{font-size:48px;margin-bottom:12px}
 .empty p{font-size:14px}
-
-/* ── OVERLAY DARK ── */
-#sheet-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);
-  z-index:55;display:none;
-}
+#sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;display:none}
 #sheet-overlay.show{display:block}
-
-/* ── PRINT ── */
-@media print{
-  #shell{display:none}
-  #print-area{display:block!important}
-}
-#print-area{display:none;direction:rtl;font-family:'Tajawal',sans-serif;padding:20px;max-width:380px;margin:auto}
-
-/* ── TOAST ── */
-#toast{
-  position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);
-  background:var(--G);color:#000;padding:10px 22px;border-radius:30px;
-  font-weight:700;font-size:13px;z-index:999;
-  opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;
-}
+#toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--G);color:#000;padding:10px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ── INVENTORY FILTERS ── */
 .filter-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-
-/* ── LOCK SCREEN ── */
-#lock-screen{
-  position:fixed;inset:0;z-index:200;
-  background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:32px 24px;
-  max-width:480px;margin:0 auto;
-}
+/* LOCK */
+#lock-screen{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;max-width:480px;margin:0 auto}
 #lock-screen.hidden{display:none}
-.lock-logo{font-size:56px;margin-bottom:8px}
+.lock-logo{width:90px;height:90px;border-radius:22px;object-fit:cover;margin-bottom:12px;box-shadow:0 8px 32px rgba(246,168,50,.3)}
 .lock-title{font-size:24px;font-weight:900;color:var(--A);margin-bottom:4px}
-.lock-sub{font-size:13px;color:var(--sub);margin-bottom:32px;text-align:center}
+.lock-sub{font-size:13px;color:var(--sub);margin-bottom:32px;text-align:center;line-height:1.6}
 .lock-box{width:100%;max-width:320px}
 .lock-box label{font-size:12px;color:var(--sub);font-weight:600;display:block;margin-bottom:6px}
-.lock-box input{
-  width:100%;background:var(--s2);border:1px solid var(--border);
-  border-radius:12px;padding:14px 16px;color:var(--text);
-  font-family:'Tajawal',sans-serif;font-size:18px;text-align:center;
-  letter-spacing:4px;margin-bottom:12px;
-  -webkit-appearance:none;appearance:none;
-}
+.lock-box input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:16px;text-align:center;letter-spacing:3px;margin-bottom:12px;-webkit-appearance:none;appearance:none}
 .lock-box input:focus{outline:none;border-color:var(--A)}
 .lock-err{color:var(--A2);font-size:13px;text-align:center;min-height:20px;margin-bottom:10px}
-.lock-tabs{display:flex;gap:8px;margin-bottom:20px}
-.lock-tab{
-  flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);
-  background:var(--s2);color:var(--sub);font-family:'Tajawal',sans-serif;
-  font-size:13px;font-weight:700;cursor:pointer;text-align:center;
-}
-.lock-tab.active{background:rgba(246,168,50,.12);border-color:var(--A);color:var(--A)}
 </style>
 </head>
 <body>
 
-<!-- ═══ LOCK SCREEN ═══ -->
+<!-- LOCK SCREEN -->
 <div id="lock-screen">
-  <div class="lock-logo">🏪</div>
+  <img class="lock-logo" src="https://raw.githubusercontent.com/AnwarAboSaad/MyStore/main/logo.PNG" onerror="this.style.display='none';document.getElementById('lock-emoji').style.display='block'">
+  <div id="lock-emoji" style="font-size:56px;margin-bottom:12px;display:none">🏪</div>
   <div class="lock-title">متجري</div>
-  <div class="lock-sub" id="lock-sub">أدخل كلمة المرور للدخول</div>
-
-  <div class="lock-box">
-    <!-- TAB: مستخدم قديم = كلمة مرور فقط | مستخدم جديد = كود تفعيل + كلمة مرور -->
-    <div class="lock-tabs" id="lock-tabs">
-      <div class="lock-tab active" onclick="switchLockTab('login')">دخول</div>
-      <div class="lock-tab" onclick="switchLockTab('activate')">تفعيل جهاز جديد</div>
-    </div>
-
-    <!-- دخول عادي -->
-    <div id="tab-login">
-      <label>كلمة المرور</label>
-      <input type="password" id="lock-pass" placeholder="••••••" onkeydown="if(event.key==='Enter') doLogin()">
-      <div class="lock-err" id="lock-err-login"></div>
-      <button class="btn btn-primary btn-full" onclick="doLogin()">🔓 دخول</button>
-    </div>
-
-    <!-- تفعيل جهاز جديد -->
-    <div id="tab-activate" style="display:none">
-      <label>كود التفعيل</label>
-      <input type="text" id="lock-acode" placeholder="أدخل كود التفعيل" style="letter-spacing:2px" onkeydown="if(event.key==='Enter') document.getElementById('lock-apass').focus()">
-      <label style="margin-top:8px">كلمة المرور</label>
-      <input type="password" id="lock-apass" placeholder="••••••" onkeydown="if(event.key==='Enter') doActivate()">
-      <div class="lock-err" id="lock-err-activate"></div>
-      <button class="btn btn-primary btn-full" onclick="doActivate()">✅ تفعيل</button>
-    </div>
+  <div class="lock-sub" id="lock-sub">جهاز جديد — أدخل كود التفعيل وكلمة المرور</div>
+  <div class="lock-box" id="lock-box">
+    <!-- يتغير المحتوى بـ JS -->
   </div>
 </div>
 
 <div id="shell">
-
-  <!-- TOP BAR -->
   <div id="topbar">
     <div>
       <div class="store-name">🏪 متجري</div>
@@ -379,10 +167,9 @@ input[type="date"]{
     <div class="top-right" id="topbar-actions"></div>
   </div>
 
-  <!-- SCROLL AREA -->
   <div id="scroll-area">
 
-    <!-- ═══ DASHBOARD ═══ -->
+    <!-- DASHBOARD -->
     <div id="pg-home" class="page active">
       <div class="stats-row">
         <div class="stat-card sc-gold"><div class="stat-lbl">إجمالي المبيعات</div><div class="stat-val sv-gold" id="ds-sales">0 ₪</div></div>
@@ -390,35 +177,29 @@ input[type="date"]{
         <div class="stat-card sc-green"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ds-profit">0 ₪</div></div>
         <div class="stat-card sc-blue"><div class="stat-lbl">المنتجات</div><div class="stat-val sv-blue" id="ds-prods">0</div></div>
       </div>
-      <div class="card">
-        <div class="sec-title">آخر الفواتير</div>
-        <div id="dash-invs"></div>
-      </div>
-      <div class="card">
-        <div class="sec-title">تنبيهات المخزون</div>
-        <div id="dash-alerts"></div>
-      </div>
+      <div class="card"><div class="sec-title">آخر الفواتير</div><div id="dash-invs"></div></div>
+      <div class="card"><div class="sec-title">تنبيهات المخزون</div><div id="dash-alerts"></div></div>
     </div>
 
-    <!-- ═══ PRODUCTS ═══ -->
+    <!-- PRODUCTS -->
     <div id="pg-products" class="page">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input class="fg input" type="text" id="prod-q" placeholder="بحث في المنتجات..." oninput="renderProducts()" style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 38px 11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;width:100%">
+        <input type="text" id="prod-q" placeholder="بحث في المنتجات..." oninput="renderProducts()" style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 38px 11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;width:100%">
       </div>
       <div id="prod-list"></div>
     </div>
 
-    <!-- ═══ POS ═══ -->
+    <!-- POS -->
     <div id="pg-pos" class="page">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 38px 11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;width:100%" type="text" id="pos-q" placeholder="بحث..." oninput="renderPOS()">
+        <input type="text" id="pos-q" placeholder="بحث..." oninput="renderPOS()" style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 38px 11px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;width:100%">
       </div>
       <div class="pos-grid" id="pos-grid"></div>
     </div>
 
-    <!-- ═══ MORE ═══ -->
+    <!-- MORE -->
     <div id="pg-more" class="page">
       <div class="card" style="padding:6px 0">
         <div class="list-row" style="padding:14px;cursor:pointer" onclick="openSubPage('invoices')">
@@ -444,12 +225,12 @@ input[type="date"]{
       </div>
     </div>
 
-    <!-- ═══ SUB: INVOICES ═══ -->
+    <!-- INVOICES -->
     <div id="pg-invoices" class="page">
       <div id="inv-list"></div>
     </div>
 
-    <!-- ═══ SUB: EXPENSES ═══ -->
+    <!-- EXPENSES -->
     <div id="pg-expenses" class="page">
       <div class="card">
         <div class="sec-title">إضافة مصروف</div>
@@ -463,13 +244,10 @@ input[type="date"]{
         </div>
         <button class="btn btn-primary btn-full" onclick="addExpense()">➕ إضافة مصروف</button>
       </div>
-      <div class="card">
-        <div class="sec-title">المصاريف السابقة</div>
-        <div id="exp-list"></div>
-      </div>
+      <div class="card"><div class="sec-title">المصاريف السابقة</div><div id="exp-list"></div></div>
     </div>
 
-    <!-- ═══ SUB: INVENTORY ═══ -->
+    <!-- INVENTORY -->
     <div id="pg-inventory" class="page">
       <div class="card">
         <div class="sec-title">نطاق الجرد</div>
@@ -494,24 +272,16 @@ input[type="date"]{
           <div class="stat-card sc-red"><div class="stat-lbl">المصاريف</div><div class="stat-val sv-red" id="ir-e">0 ₪</div></div>
           <div class="stat-card sc-green" style="grid-column:1/-1"><div class="stat-lbl">صافي الربح</div><div class="stat-val sv-green" id="ir-p">0 ₪</div></div>
         </div>
-        <div class="card" id="iv-inv-card" style="display:none">
-          <div class="sec-title">تفاصيل الفواتير</div>
-          <div id="iv-inv-list"></div>
-        </div>
-        <div class="card" id="iv-exp-card" style="display:none">
-          <div class="sec-title">تفاصيل المصاريف</div>
-          <div id="iv-exp-list"></div>
-        </div>
+        <div class="card" id="iv-inv-card" style="display:none"><div class="sec-title">تفاصيل الفواتير</div><div id="iv-inv-list"></div></div>
+        <div class="card" id="iv-exp-card" style="display:none"><div class="sec-title">تفاصيل المصاريف</div><div id="iv-exp-list"></div></div>
       </div>
     </div>
 
-    <!-- ═══ SUB: BACKUP ═══ -->
+    <!-- BACKUP -->
     <div id="pg-backup" class="page">
       <div class="card">
         <div class="sec-title">💾 نسخة احتياطية</div>
-        <p style="font-size:13px;color:var(--sub);margin-bottom:16px;line-height:1.6">
-          احفظ بيانات متجرك (منتجات، فواتير، مصاريف) في ملف على جهازك، وأعد تحميله في أي وقت.
-        </p>
+        <p style="font-size:13px;color:var(--sub);margin-bottom:16px;line-height:1.6">احفظ بيانات متجرك في ملف على جهازك وأعد تحميله في أي وقت.</p>
         <div style="display:flex;flex-direction:column;gap:10px">
           <button class="btn btn-success btn-full" onclick="downloadBackup()">⬇️ تنزيل نسخة احتياطية</button>
           <button class="btn btn-ghost btn-full" onclick="document.getElementById('restore-input').click()">⬆️ استيراد نسخة احتياطية</button>
@@ -527,27 +297,21 @@ input[type="date"]{
       </div>
     </div>
 
-  </div><!-- /scroll-area -->
+  </div>
 
-  <!-- BOTTOM NAV -->
   <div id="bottom-nav">
     <button class="nav-btn active" onclick="navGo('home')"><span class="ico">🏠</span><span class="lbl">الرئيسية</span></button>
     <button class="nav-btn" onclick="navGo('products')"><span class="ico">📦</span><span class="lbl">المنتجات</span></button>
     <button class="nav-btn" onclick="navGo('pos')"><span class="ico">🛒</span><span class="lbl">الكاشير</span></button>
     <button class="nav-btn" onclick="navGo('more')"><span class="ico">☰</span><span class="lbl">المزيد</span></button>
   </div>
-</div><!-- /shell -->
+</div>
 
-<!-- SHEET OVERLAY -->
 <div id="sheet-overlay" onclick="closeCart()"></div>
 
-<!-- CART SHEET -->
 <div id="cart-sheet">
   <div class="sheet-handle"></div>
-  <div class="sheet-head">
-    <h3>🛒 السلة</h3>
-    <button class="btn btn-ghost btn-sm" onclick="closeCart()">✕</button>
-  </div>
+  <div class="sheet-head"><h3>🛒 السلة</h3><button class="btn btn-ghost btn-sm" onclick="closeCart()">✕</button></div>
   <div class="sheet-body" id="cart-body"></div>
   <div class="sheet-foot">
     <div class="disc-row">
@@ -563,7 +327,6 @@ input[type="date"]{
   </div>
 </div>
 
-<!-- CART FAB -->
 <button id="cart-fab" onclick="openCart()">
   <span>عرض السلة</span>
   <div class="cart-count" id="cart-count">0</div>
@@ -605,16 +368,14 @@ input[type="date"]{
     <div class="modal-handle"></div>
     <div class="modal-title">🧾 تفاصيل الفاتورة</div>
     <div id="inv-modal-body"></div>
-    <div style="margin-top:16px">
-      <button class="btn btn-ghost btn-full" onclick="closeModal('inv-modal')">إغلاق</button>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-danger" style="flex:1" onclick="deleteCurrentInvoice()">🗑️ حذف الفاتورة</button>
+      <button class="btn btn-ghost" onclick="closeModal('inv-modal')">إغلاق</button>
     </div>
   </div>
 </div>
 
-<!-- PRINT AREA -->
 <div id="print-area"></div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
@@ -624,7 +385,6 @@ let cart=[];
 let curPage='home';
 let curInv=null;
 
-// مخطط الألوان: اسم اللون → HEX
 const COLOR_MAP={
   'أحمر':'#ef4444','أحمر غامق':'#991b1b','أحمر فاتح':'#fca5a5',
   'أزرق':'#3b82f6','أزرق غامق':'#1e3a8a','أزرق فاتح':'#93c5fd','أزرق سماوي':'#38bdf8',
@@ -656,8 +416,7 @@ function colorDot(name,size=10){
 function loadDB(){
   const s=localStorage.getItem('mstore');
   if(s) db=JSON.parse(s);
-  migrateDates(); // تحويل التواريخ القديمة لـ ISO
-  saveDB();       // حفظ البيانات بعد التحويل
+  migrateDates();
   document.getElementById('exp-date').value=new Date().toISOString().split('T')[0];
   updateBackupStats();
 }
@@ -683,16 +442,8 @@ function navGo(p){
   });
   showPage(p);
 }
-function openSubPage(p){
-  showPage(p);
-  // Update topbar with back button
-  document.getElementById('topbar-actions').innerHTML=`<button class="btn btn-ghost btn-sm" onclick="goBack()">← رجوع</button>`;
-}
-function goBack(){
-  showPage('more');
-  navGo('more');
-  document.getElementById('topbar-actions').innerHTML='';
-}
+function openSubPage(p){ showPage(p); document.getElementById('topbar-actions').innerHTML=`<button class="btn btn-ghost btn-sm" onclick="goBack()">← رجوع</button>`; }
+function goBack(){ showPage('more'); navGo('more'); document.getElementById('topbar-actions').innerHTML=''; }
 function showPage(p){
   curPage=p;
   document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
@@ -700,10 +451,7 @@ function showPage(p){
   if(el) el.classList.add('active');
   document.getElementById('topbar-title').textContent=pageTitles[p]||p;
   if(!subPages.includes(p)) document.getElementById('topbar-actions').innerHTML='';
-  // page-specific actions
-  if(p==='products'){
-    document.getElementById('topbar-actions').innerHTML=`<button class="btn btn-primary btn-sm" onclick="openAddProduct()">+ إضافة</button>`;
-  }
+  if(p==='products') document.getElementById('topbar-actions').innerHTML=`<button class="btn btn-primary btn-sm" onclick="openAddProduct()">+ إضافة</button>`;
   if(p==='pos') renderPOS();
   if(p==='home') updateDash();
   if(p==='invoices') renderInvoices();
@@ -716,11 +464,12 @@ function showPage(p){
 function updateDash(){
   const ts=db.invoices.reduce((a,i)=>a+i.total,0);
   const te=db.expenses.reduce((a,e)=>a+e.amount,0);
+  let buyCost=0;
+  db.invoices.forEach(inv=>{ inv.items.forEach(item=>{ const prod=db.products.find(p=>p.id===item.pid); if(prod) buyCost+=(prod.buy||0)*item.qty; }); });
   document.getElementById('ds-sales').textContent=fmt(ts);
   document.getElementById('ds-exp').textContent=fmt(te);
-  document.getElementById('ds-profit').textContent=fmt(ts-te);
+  document.getElementById('ds-profit').textContent=fmt(ts-te-buyCost);
   document.getElementById('ds-prods').textContent=db.products.length;
-  // recent invoices
   const ri=[...db.invoices].reverse().slice(0,4);
   document.getElementById('dash-invs').innerHTML=ri.length?ri.map(i=>`
     <div class="list-row" onclick="viewInvoice(${i.id})" style="cursor:pointer">
@@ -728,7 +477,6 @@ function updateDash(){
       <div class="row-info"><div class="row-title">فاتورة #${i.id}</div><div class="row-sub">${i.date} • ${i.items.length} صنف</div></div>
       <div class="row-price">${fmt(i.total)}</div>
     </div>`).join(''):`<div class="empty"><div class="ei">🧾</div><p>لا توجد فواتير بعد</p></div>`;
-  // low stock
   const low=db.products.filter(p=>p.qty<=3);
   document.getElementById('dash-alerts').innerHTML=low.length?low.map(p=>`
     <div class="list-row">
@@ -739,11 +487,7 @@ function updateDash(){
 }
 
 // ═══ PRODUCTS ═══
-function openAddProduct(){
-  clearProdForm();
-  document.getElementById('prod-modal-title').textContent='➕ إضافة منتج';
-  openModal('add-product-modal');
-}
+function openAddProduct(){ clearProdForm(); document.getElementById('prod-modal-title').textContent='➕ إضافة منتج'; openModal('add-product-modal'); }
 function clearProdForm(){
   ['p-num','p-name','p-color','p-buy','p-sell','p-qty'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('edit-pid').value='';
@@ -835,8 +579,7 @@ function addToCart(pid){
   const ex=cart.find(c=>c.pid===pid);
   if(ex){if(ex.qty>=p.qty) return toast('⚠️ لا يوجد مخزون كافٍ',true); ex.qty++;}
   else cart.push({pid,name:p.name,price:p.sell,qty:1,color:p.color||''});
-  renderCart(); updateFAB();
-  toast(`+ ${p.name}`);
+  renderCart(); updateFAB(); toast(`+ ${p.name}`);
 }
 function changeQty(pid,d){
   const item=cart.find(c=>c.pid===pid); if(!item) return;
@@ -846,7 +589,8 @@ function changeQty(pid,d){
 }
 function renderCart(){
   const body=document.getElementById('cart-body');
-  if(!cart.length){body.innerHTML='<div class="empty" style="padding:20px 0"><div class="ei">🛒</div><p>السلة فارغة</p></div>';
+  if(!cart.length){
+    body.innerHTML='<div class="empty" style="padding:20px 0"><div class="ei">🛒</div><p>السلة فارغة</p></div>';
   } else {
     body.innerHTML=cart.map(c=>`
       <div class="cart-row">
@@ -872,7 +616,7 @@ function updateFAB(){
   const fab=document.getElementById('cart-fab');
   const total=cart.reduce((a,c)=>a+c.qty,0);
   if(total>0){fab.classList.add('show'); document.getElementById('cart-count').textContent=total;}
-  else{fab.classList.remove('show');}
+  else fab.classList.remove('show');
 }
 function clearCart(){cart=[];document.getElementById('discount').value='';renderCart();updateFAB();}
 function openCart(){document.getElementById('cart-sheet').classList.add('open');document.getElementById('sheet-overlay').classList.add('show');renderCart();}
@@ -883,12 +627,10 @@ function checkout(){
   const sub=cart.reduce((a,c)=>a+c.price*c.qty,0);
   const total=Math.max(0,sub-disc);
   const now=new Date();
-  const isoDate=now.toISOString().split('T')[0]; // YYYY-MM-DD
-  const isoTime=now.toTimeString().slice(0,5);   // HH:MM
   const inv={
     id:db.ni++,
-    date:isoDate,
-    time:isoTime,
+    date:now.toISOString().split('T')[0],
+    time:now.toTimeString().slice(0,5),
     items:cart.map(c=>({...c})),
     discount:disc,subtotal:sub,total
   };
@@ -921,7 +663,7 @@ function viewInvoice(id){
     <div style="font-size:12px;color:var(--sub);margin-bottom:12px">فاتورة #${curInv.id} • ${curInv.date} ${curInv.time||''}</div>
     ${curInv.items.map(it=>`
       <div class="list-row">
-        <div class="row-info"><div class="row-title">${it.name}</div><div class="row-sub">${fmt(it.price)} × ${it.qty}</div></div>
+        <div class="row-info"><div class="row-title">${it.name}${it.color?` <span style="font-size:11px;color:var(--sub)">${it.color}</span>`:''}</div><div class="row-sub">${fmt(it.price)} × ${it.qty}</div></div>
         <div class="row-price">${fmt(it.price*it.qty)}</div>
       </div>`).join('')}
     <hr class="div">
@@ -931,19 +673,12 @@ function viewInvoice(id){
   `;
   openModal('inv-modal');
 }
-function printInv(){
+function deleteCurrentInvoice(){
   if(!curInv) return;
-  document.getElementById('print-area').innerHTML=`
-    <div style="text-align:center;margin-bottom:16px"><h2 style="font-size:22px;font-weight:900">🏪 متجري</h2><p style="font-size:13px;color:#666">فاتورة بيع</p></div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:14px"><span>فاتورة #${curInv.id}</span><span>${curInv.date}</span></div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:14px">
-      <thead><tr style="border-bottom:2px solid #000">${['المنتج','الكمية','السعر','المجموع'].map(h=>`<th style="padding:6px;text-align:right;font-size:12px">${h}</th>`).join('')}</tr></thead>
-      <tbody>${curInv.items.map(it=>`<tr style="border-bottom:1px solid #eee">${[it.name,it.qty,fmt(it.price),fmt(it.price*it.qty)].map(v=>`<td style="padding:6px;font-size:12px">${v}</td>`).join('')}</tr>`).join('')}</tbody>
-    </table>
-    ${curInv.discount?`<p style="text-align:left;font-size:13px">الخصم: ${fmt(curInv.discount)}</p>`:''}
-    <p style="text-align:left;font-size:18px;font-weight:900;margin-bottom:16px">الإجمالي: ${fmt(curInv.total)}</p>
-    <p style="text-align:center;font-size:12px;color:#999">شكراً لتسوقكم معنا ❤️</p>`;
-  window.print();
+  if(!confirm(`حذف فاتورة #${curInv.id}؟`)) return;
+  db.invoices=db.invoices.filter(i=>i.id!==curInv.id);
+  saveDB(); closeModal('inv-modal'); renderInvoices(); updateDash();
+  toast('🗑️ تم حذف الفاتورة');
 }
 
 // ═══ EXPENSES ═══
@@ -983,44 +718,40 @@ function renderExpenses(){
     </div>`).join(''):`<div class="empty" style="padding:16px 0"><div class="ei">💸</div><p>لا توجد مصاريف</p></div>`;
 }
 
-// ═══ MIGRATE OLD DATES TO ISO ═══
-// يحول أي تاريخ قديم (عربي أو مقلوب) إلى YYYY-MM-DD
+// ═══ MIGRATE DATES ═══
 function anyToISO(d){
   if(!d) return '';
-  d = String(d).trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d; // already ISO
-  // Eastern Arabic → Western digits
-  d = d.replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c).toString());
-  // remove any non-digit separator noise, split on / or - or .
-  const parts = d.split(/[\/\.\-\s]+/).map(p=>parseInt(p,10)).filter(n=>!isNaN(n));
+  d=String(d).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+  d=d.replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c).toString());
+  const parts=d.split(/[\/\.\-\s]+/).map(p=>parseInt(p,10)).filter(n=>!isNaN(n));
   if(parts.length===3){
-    const [a,b,c] = parts;
-    if(a>31) return `${a}-${String(b).padStart(2,'0')}-${String(c).padStart(2,'0')}`;  // Y/M/D
-    if(c>31) return `${c}-${String(b).padStart(2,'0')}-${String(a).padStart(2,'0')}`;  // D/M/Y
+    const [a,b,c]=parts;
+    if(a>31) return `${a}-${String(b).padStart(2,'0')}-${String(c).padStart(2,'0')}`;
+    if(c>31) return `${c}-${String(b).padStart(2,'0')}-${String(a).padStart(2,'0')}`;
   }
-  // fallback: try JS Date parse
-  const parsed = new Date(d);
+  const parsed=new Date(d);
   if(!isNaN(parsed)) return parsed.toISOString().split('T')[0];
-  return '';
+  return d;
 }
 function migrateDates(){
-  db.invoices.forEach(i=>{ i.date = anyToISO(i.date)||i.date; delete i.displayDate; });
-  db.expenses.forEach(e=>{ e.date = anyToISO(e.date)||e.date; });
+  db.invoices.forEach(i=>{i.date=anyToISO(i.date)||i.date; delete i.displayDate;});
+  db.expenses.forEach(e=>{e.date=anyToISO(e.date)||e.date;});
 }
 
 // ═══ INVENTORY ═══
 function runInventory(){
-  const from=document.getElementById('iv-from').value; // YYYY-MM-DD
+  const from=document.getElementById('iv-from').value;
   const to=document.getElementById('iv-to').value;
   const type=document.getElementById('iv-type').value;
   let invs=[...db.invoices];
   let exps=[...db.expenses];
-  if(from){ invs=invs.filter(i=>i.date>=from); exps=exps.filter(e=>e.date>=from); }
-  if(to){   invs=invs.filter(i=>i.date<=to);   exps=exps.filter(e=>e.date<=to); }
+  if(from){invs=invs.filter(i=>i.date>=from); exps=exps.filter(e=>e.date>=from);}
+  if(to){invs=invs.filter(i=>i.date<=to); exps=exps.filter(e=>e.date<=to);}
   const st=invs.reduce((a,i)=>a+i.total,0);
   const et=exps.reduce((a,e)=>a+e.amount,0);
   let buyCost=0;
-  invs.forEach(inv=>{ inv.items.forEach(item=>{ const prod=db.products.find(p=>p.id===item.pid); if(prod) buyCost+=(prod.buy||0)*item.qty; }); });
+  invs.forEach(inv=>{inv.items.forEach(item=>{const prod=db.products.find(p=>p.id===item.pid);if(prod) buyCost+=(prod.buy||0)*item.qty;});});
   document.getElementById('ir-s').textContent=fmt(st);
   document.getElementById('ir-e').textContent=fmt(et);
   document.getElementById('ir-p').textContent=fmt(st-et-buyCost);
@@ -1049,13 +780,12 @@ function runInventory(){
 
 // ═══ BACKUP ═══
 function downloadBackup(){
-  const json=JSON.stringify(db,null,2);
-  const blob=new Blob([json],{type:'application/json'});
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download=`store-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
-  toast('✅ تم تنزيل النسخة الاحتياطية');
+  toast('✅ تم التنزيل');
 }
 function restoreBackup(inp){
   const f=inp.files[0]; if(!f) return;
@@ -1089,59 +819,58 @@ function toast(msg,err=false){
 }
 
 // ═══ LOCK SYSTEM ═══
-// ⚙️ غيّر هذه القيم فقط:
+// ⚙️ غيّر هذه القيم فقط (استخدم hash-generator.html للتوليد):
 const PASS_HASH  = 'd32c81fd88840767a91b48ad5e05881862f12fd0e40cff17910699967a97aae7';
 const ACTIV_HASH = 'd32c81fd88840767a91b48ad5e05881862f12fd0e40cff17910699967a97aae7';
-const EXPIRY_DAYS = 365; // مدة الترخيص بالأيام
-const WARN_DAYS   = 30;  // إنذار قبل كم يوم
+const EXPIRY_DAYS = 365;
+const WARN_DAYS   = 30;
 
 async function sha256(msg){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
-function getActivation(){
-  const raw=localStorage.getItem('_actv');
-  if(!raw) return null;
-  try{ return JSON.parse(raw); }catch{ return null; }
-}
-function saveActivation(){
-  localStorage.setItem('_actv', JSON.stringify({ date: Date.now() }));
-}
+function getActivation(){ try{return JSON.parse(localStorage.getItem('_actv'));}catch{return null;} }
+function saveActivation(){ localStorage.setItem('_actv',JSON.stringify({date:Date.now()})); }
 function daysLeft(){
-  const a=getActivation();
-  if(!a) return -1;
-  const diff=EXPIRY_DAYS - Math.floor((Date.now()-a.date)/(1000*60*60*24));
-  return diff;
+  const a=getActivation(); if(!a) return -1;
+  return EXPIRY_DAYS-Math.floor((Date.now()-a.date)/(1000*60*60*24));
 }
 
-function switchLockTab(tab){
-  document.querySelectorAll('.lock-tab').forEach((t,i)=>t.classList.toggle('active',(i===(tab==='login'?0:1))));
-  document.getElementById('tab-login').style.display=tab==='login'?'block':'none';
-  document.getElementById('tab-activate').style.display=tab==='activate'?'block':'none';
-  document.getElementById('lock-sub').textContent=tab==='login'?'أدخل كلمة المرور للدخول':'فعّل جهازك بكود التفعيل';
+function renderLockActivate(msg){
+  document.getElementById('lock-sub').textContent = msg||'أدخل كود التفعيل وكلمة المرور';
+  document.getElementById('lock-box').innerHTML=`
+    <label>كود التفعيل</label>
+    <input type="text" id="lock-acode" placeholder="كود التفعيل" style="letter-spacing:2px" onkeydown="if(event.key==='Enter')document.getElementById('lock-apass').focus()">
+    <label style="margin-top:4px">كلمة المرور</label>
+    <input type="password" id="lock-apass" placeholder="••••••" onkeydown="if(event.key==='Enter')doActivate()">
+    <div class="lock-err" id="lock-err"></div>
+    <button class="btn btn-primary btn-full" onclick="doActivate()">✅ تفعيل الجهاز</button>
+  `;
+}
+function renderLockLogin(){
+  document.getElementById('lock-sub').textContent='أدخل كلمة المرور للدخول';
+  document.getElementById('lock-box').innerHTML=`
+    <label>كلمة المرور</label>
+    <input type="password" id="lock-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="lock-err" id="lock-err"></div>
+    <button class="btn btn-primary btn-full" onclick="doLogin()">🔓 دخول</button>
+  `;
 }
 
 async function doLogin(){
   const pass=document.getElementById('lock-pass').value;
-  const err=document.getElementById('lock-err-login');
-  if(!pass){ err.textContent='أدخل كلمة المرور'; return; }
+  const err=document.getElementById('lock-err');
+  if(!pass){err.textContent='أدخل كلمة المرور';return;}
   const h=await sha256(pass);
-  if(h===PASS_HASH){
-    err.textContent='';
-    unlockApp();
-  } else {
-    err.textContent='❌ كلمة المرور غير صحيحة';
-    document.getElementById('lock-pass').value='';
-  }
+  if(h===PASS_HASH){ err.textContent=''; unlockApp(); }
+  else{ err.textContent='❌ كلمة المرور غير صحيحة'; document.getElementById('lock-pass').value=''; }
 }
-
 async function doActivate(){
-  const code=document.getElementById('lock-acode').value.trim();
-  const pass=document.getElementById('lock-apass').value;
-  const err=document.getElementById('lock-err-activate');
-  if(!code||!pass){ err.textContent='أدخل الكود وكلمة المرور'; return; }
-  const ch=await sha256(code);
+  const code=(document.getElementById('lock-acode')||{}).value||'';
+  const pass=(document.getElementById('lock-apass')||{}).value||'';
+  const err=document.getElementById('lock-err');
+  if(!code||!pass){err.textContent='أدخل الكود وكلمة المرور';return;}
+  const ch=await sha256(code.trim());
   const ph=await sha256(pass);
   if(ch===ACTIV_HASH && ph===PASS_HASH){
     saveActivation();
@@ -1153,16 +882,11 @@ async function doActivate(){
     document.getElementById('lock-apass').value='';
   }
 }
-
 function unlockApp(){
   document.getElementById('lock-screen').classList.add('hidden');
-  // إظهار إنذار انتهاء الترخيص إذا اقترب
   const left=daysLeft();
-  if(left>0 && left<=WARN_DAYS){
-    setTimeout(()=>showExpiryWarning(left), 800);
-  }
+  if(left>0 && left<=WARN_DAYS) setTimeout(()=>showExpiryWarning(left),800);
 }
-
 function showExpiryWarning(days){
   const overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;display:flex;align-items:center;justify-content:center;padding:24px';
@@ -1173,36 +897,26 @@ function showExpiryWarning(days){
       <div style="font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:20px">
         باقي على انتهاء ترخيص هذا الجهاز<br>
         <strong style="font-size:24px;color:var(--A)">${days}</strong> يوم<br>
-        تواصل مع المورد لتجديد التفعيل قبل انتهاء المدة.
+        تواصل مع المورد لتجديد التفعيل.
       </div>
       <button class="btn btn-primary btn-full" onclick="this.closest('div').parentElement.remove()">حسناً، فهمت</button>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(overlay);
 }
-
 function initLock(){
   const left=daysLeft();
-
   if(left<0){
-    // جهاز جديد أو لم يُفعَّل بعد
-    document.getElementById('lock-tabs').style.display='none';
-    switchLockTab('activate');
-    document.getElementById('lock-sub').textContent='جهاز جديد — أدخل كود التفعيل وكلمة المرور';
-
+    // جهاز جديد
+    renderLockActivate('جهاز جديد — أدخل كود التفعيل وكلمة المرور');
   } else if(left===0){
-    // انتهى الترخيص اليوم
-    document.getElementById('lock-tabs').style.display='none';
-    switchLockTab('activate');
-    document.getElementById('lock-sub').textContent='⚠️ انتهى ترخيص هذا الجهاز — أدخل كود التفعيل الجديد';
-    localStorage.removeItem('_actv'); // مسح التفعيل القديم
-
+    // انتهى الترخيص
+    localStorage.removeItem('_actv');
+    renderLockActivate('⚠️ انتهى الترخيص — أدخل كود التفعيل الجديد');
   } else {
-    // جهاز مفعّل وصالح → كلمة مرور فقط
-    document.getElementById('lock-tabs').style.display='none';
-    document.getElementById('tab-activate').style.display='none';
-    document.getElementById('tab-login').style.display='block';
-    document.getElementById('lock-sub').textContent='أدخل كلمة المرور للدخول';
+    // ✅ مفعّل وصالح — يدخل مباشرة بدون كلمة مرور
+    document.getElementById('lock-screen').classList.add('hidden');
+    // لكن نعرض الإنذار إذا اقترب الانتهاء
+    if(left<=WARN_DAYS) setTimeout(()=>showExpiryWarning(left),800);
   }
 }
 
